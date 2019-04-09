@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Job and Location Optimizer">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="keywords" content="Job, Jobs, Location, Locations">
+    <meta name="author" content="Jeremy Le-Ogier">
+    <link rel="normalize" type="text/css" href="normalize.css"></link>
+    <link rel="stylesheet" type="text/css" href="design.css"></link>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"></link>    
+</head>
+
+
+<style>
+    /* Always set the map height explicitly to define the size of the div
+        * element that contains the map. */
+    #map {
+        height: 100%;
+    }
+    /* Optional: Makes the sample page fill the window. */
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+
+<body>      
+    <form>
+        <legend>Job and Location Optimizer</legend>
+        <input id="userInputCountry" class="userInputs" type="text" placeholder="Country MUST BE: UK" required>
+        <input id="userInputCity" class="userInputs" type="text" placeholder="City MUST BE: London" required>
+        <input id="userInputJobCategory" class="userInputs" type="text" placeholder="Job Category MUST BE: it-jobs" required>
+        <input id="submitButton" type="submit">
+    </form>
+
+    <div id="results"></div>
+
+    
+    
+    <h1>Here is a heat map showing the selected jobs' available postings</h1>
+
+<div id="map"></div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI&callback=initMap" async defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>   
+    <script src="project.js"></script>
+    
+</body>
+
+</html>
