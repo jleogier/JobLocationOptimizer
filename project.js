@@ -27,19 +27,20 @@ $(function() {
                  Accept: 'application/json'
              }
         })
-        .then (response => /*Error Handler*/ response.json())   
-        .then(data => console.log(data))
-        .then(data => displayResults(data));
+        .then (response => /*Error Handler*/ response.json())           
     }
 
-    function displayResults (data) {
-        let historyHTML = data.month.map(displayHistory).join(`\n`);
-        $('#results').html(historyHTML);
-
+    function displayResults (data) {        
+        $('#results').html(historyHTML(data.month));
     }
 
-    function displayHistory (data) {
-        return `History: ${data.month}`
+    function historyHTML (months) {
+        let historyHTML = Object.keys(months).map(key => historyMonthHTML (key, months[key])).join(`\n`);
+        return `<div>History:${historyHTML}</div>`
+    }
+
+    function historyMonthHTML (month, salary) {
+        return `<div>${month} salary: ${salary}</div>`
     }
 
 
@@ -73,13 +74,10 @@ $(function() {
 
             // Does the things
 
-            getAdzunaJobHistory (userInputCountry, userInputCity, jobCategory);
-
-            displayResults(data);
+            getAdzunaJobHistory (userInputCountry, userInputCity, jobCategory)
+            .then(data => displayResults(data));
 
         });
-        
-
     }
 
  
