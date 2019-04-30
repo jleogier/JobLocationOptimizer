@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <meta name="keywords" content="Job, Jobs, Location, Locations">
     <meta name="author" content="Jeremy Le-Ogier">
-    <link rel="normalize" type="text/css" href="normalize.css"></link>
-    <link rel="stylesheet" type="text/css" href="design.css"></link>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"></link>    
+    <link rel="stylesheet" type="text/css" href="design.css"></link>
 </head>
 
 
 <style>
+    /* For Map */
+
     /* Always set the map height explicitly to define the size of the div
         * element that contains the map. */
     #map {
@@ -28,18 +29,69 @@
 
 <body>      
     <form>
-        <legend>Job and Location Optimizer</legend>
-        <input id="userInputCountry" class="userInputs" type="text" placeholder="Country MUST BE: UK" required>
-        <input id="userInputCity" class="userInputs" type="text" placeholder="City MUST BE: London" required>
-        <input id="userInputJobCategory" class="userInputs" type="text" placeholder="Job Category MUST BE: it-jobs" required>
+        <legend>Job and Location Optimizer</legend>        
+
+        <h3>Select Location</h3>
+        <select id="userInputCountry" class="userInputs">
+            <option value="us">United States</option>
+            <option value="gb">Great Britain</option>
+            <option value="au">Australia</option>
+            <option value="at">Austria</option>
+            <option value="br">Brazil</option>
+            <option value="ca">Canada</option>
+            <option value="de">Germany</option>
+            <option value="fr">France</option>
+            <option value="in">India</option>
+            <option value="it">Italy</option>
+            <option value="nl">Netherlands</option>
+            <option value="nz">New Zealand</option>
+            <option value="pl">Poland</option>
+            <option value="ru">Russia</option>
+            <option value="sg">Singapore</option>
+            <option value="za">South Africa</option>
+        </select>
+
+        <input id="userInputCity" class="userInputs" type="text" placeholder="City: e,g Los Angeles" required>
+
+        <h3>Select Job Category</h3>
+        <select id="userInputJobCategory" class="userInputs">
+            <option value="it-jobs">IT Jobs</option>
+            <option value="consultancy-jobs">Consultancy Jobs</option>
+            <option value="charity-voluntary-jobs">Charity & Voluntary Jobs</option>
+            <option value="property-jobs">Property Jobs</option>
+            <option value="legal-jobs">Legal Jobs</option>
+            <option value="customer-services-jobs">Customer Services Jobs</option>
+            <option value="teaching-jobs">Teaching Jobs</option>
+            <option value="other-general-jobs">Other/General Jobs</option>
+            <option value="accounting-finance-jobs">Accounting & Finance Jobs</option>
+            <option value="retail-jobs">Retail Jobs</option>
+            <option value="manufacturing-jobs">Manufacturing Jobs</option>
+            <option value="hospitality-catering-jobs">Hospitality & Catering Jobs</option>
+            <option value="healthcare-nursing-jobs">Healthcare & Nursing Jobs</option>
+            <option value="trade-construction-jobs">Trade & Construction Jobs</option>
+            <option value="domestic-help-cleaning-jobs">help & Cleaning Jobs</option>
+            <option value="creative-design-jobs">Creative & Design Jobs</option>
+            <option value="logistics-warehouse-jobs">Logistics & Warehouse Jobs</option>
+            <option value="hr-jobs">HR & Recruitment Jobs</option>
+            <option value="pr-advertising-marketing-jobs">PR, Advertising & Marketing Jobs</option>
+            <option value="social-work-jobs">Social work Jobs</option>
+            <option value="travel-jobs">Travel Jobs</option>
+            <option value="energy-oil-gas-jobs">Energy, Oil & Gas Jobs</option>
+            <option value="maintenance-jobs">Maintenance Jobs</option>
+            <option value="scientific-qa-jobs">Scientific & QA Jobs</option>
+            <option value="graduate-jobs">Graduate Jobs</option>
+            <option value="engineering-jobs">Engineering Jobs</option>
+            <option value="part-time-jobs">Part time Jobs</option>
+            <option value="sales-jobs">Sales Jobs</option>
+            <option value="admin-jobs">Admin Jobs</option>
+        </select>
+        
         <input id="submitButton" type="submit">
     </form>
 
-    <div id="results"></div>
-
-    
-    
-    <h1>Here is a heat map showing the selected jobs' available postings</h1>
+    <h3>Please Note that the Salary Displayed is in the Local Currency</h3>
+    <div id="results"></div>    
+    <h4>Here is a heat map showing the selected jobs category</h4>
 
 <div id="map"></div>
 

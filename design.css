@@ -3,7 +3,7 @@ body * {
     padding: 0.5em;
 }
 
-legend, form, input, h1 {
+legend, form, input, h1, h3 {
     justify-content: center;
     align-content: center;
 }
@@ -20,8 +20,14 @@ input {
 
 #map {
     margin: 0.5em;
+    width: 100%;
 }
 
 .userInputs {
     border-style: solid;
+}
+
+ol {
+    flex-wrap: wrap;
+    max-width: 100%;
 }
