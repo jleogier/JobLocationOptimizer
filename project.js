@@ -3,7 +3,7 @@ $(function() {
 
     const GMAPS_GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json?'
     const GMAPS_API_KEY = 'AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI';
-    var map;
+    
 
     const ADZUNA_BASE_URL = 'http://api.adzuna.com/v1/api/';
     const ADZUNA_KEY = 'b22271cad1b74c76f8c6ec3587c34e86';
@@ -22,7 +22,7 @@ $(function() {
 
 
     // Gets general Job Search Data
-    function AdzunaJobSearch (userInputCountry, userInputCity, jobCategory){
+    function getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory){
         let AdzunaJobSearchResponse = ADZUNA_BASE_URL + `jobs/${userInputCountry}/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_KEY}&where=${userInputCity}&category=${jobCategory}&content-type=application/json`;
 
         console.log('The Job Search Response is:', AdzunaJobSearchResponse);
@@ -32,30 +32,23 @@ $(function() {
                 Accept: 'application/json'
             }
         })
+
         .then (response => /*Error Handler*/ response.json())
     }
 
 
-    // Gets Total Job Count and Salary mean from search
-    function AdzunaJobSearchCountnSalary (data) {                
-        
-        let jobCount = data.count;
-        let jobSalaryMean = data.mean;
-
-        console.log('Job Count is:', jobCount);
-        console.log('Job Salary Mean is:', jobSalaryMean);
-
-        let jobCountnSalaryData = [jobCount, jobSalaryMean];
-
-        return jobCountnSalaryData;
-    }
-
-
     // Converts Total Count and Salary Mean response into HTML
-    function jobCountnSalaryHTML (jobCountnSalaryData) {
-        let jobCountSalaryHTML = Object.keys(jobCountnSalaryData);
+    function jobCountSalaryHTML (data) {
+        // let data = AdzunaJobSearchCountSalary (jobCountSalaryData);
 
-        return `<div>${jobCountSalaryHTML}</div>`
+        return `
+                <label>Job Count
+                    <span>${data.count}</span>
+                </label>
+
+                <label>Salary Mean
+                    <span>${data.mean}</span>
+                </label>`
     }
 
 
@@ -77,8 +70,20 @@ $(function() {
     
 
     // Displays results in HTLM
-    function displayResults (data) {        
-        $('#results').html(historyHTML(data.month)).append(jobCountnSalaryHTML(jobCountnSalaryData));
+    function displayAdzunaJobHistory (data) {  
+        console.log('JSON results from history:', data);
+
+        if (data && data.month) {
+            $('#results').append(historyHTML(data.month));
+        } 
+    }
+
+    function displayAdzunaJobSearch (data) {
+        console.log('JSON results from job search:', data);
+        if (data && data.mean && data.count) {
+            $('#results').append(jobCountSalaryHTML(data));
+        }        
+        // $('#results').html(historyHTML(data.month)).append(jobCountSalaryHTML(jobCountSalaryData));
     }
 
 
@@ -99,37 +104,7 @@ $(function() {
 
 
 
-    // Initializes Map 
-    function initMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        // center: {lat: 34.052234, lng: -118.243685},
-        center: {lat: 37.77439, lng: -122.419416},
-        zoom: 9
-        });
 
-
-        infoWindow = new google.maps.InfoWindow;
-
-        // Get User Location
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-              var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-              };
-  
-              infoWindow.setPosition(pos);
-              infoWindow.setContent('Location found.');
-              infoWindow.open(map);
-              map.setCenter(pos);
-            }, function() {
-              handleLocationError(true, infoWindow, map.getCenter());
-            });
-        } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
-        }
-    }
 
 
     // Update Map
@@ -160,24 +135,59 @@ $(function() {
             console.log('This is the captured User Input for the CITY:', userInputCity);
             console.log('This is the captured User Input for the JOB CATEGORY:', jobCategory);
 
+            $('#results').html('');
 
             // Does the things
             getAdzunaJobHistory (userInputCountry, userInputCity, jobCategory)
-            AdzunaJobSearch (userInputCountry, userInputCity, jobCategory)
-            .then(data => displayResults(data));
+            .then(data => displayAdzunaJobHistory(data));
+
+            getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory)
+            .then(data => displayAdzunaJobSearch(data));
+        
         });
     }
-
-
-
-    getAdzunaJobHistory();
-    AdzunaJobSearch();
-    AdzunaJobSearchCount();
-
-    AdzunaJobSearchCountnSalary();
-
-    jobCountnSalaryHTML();
-    submitHandler();
-
-    initMap ();
+    submitHandler();    
 });
+
+    // Needs argument that takes Array that have Object Coordinates
+    function centerCoordOfGroup () {
+        
+    }
+
+// 
+    function centerMapOnSearch () {
+
+    }
+
+// Initializes Map 
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 37.77439, lng: -122.419416},
+        zoom: 9
+        });
+
+
+        infoWindow = new google.maps.InfoWindow;
+
+        // Get User Location
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            infoWindow.open(map);
+            map.setCenter(pos);
+            }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+            });
+        } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
+        }
+    }
+
+var map;
