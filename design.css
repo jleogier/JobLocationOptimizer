@@ -3,7 +3,7 @@ body * {
     padding: 0.5em;
 }
 
-legend, form, input, h1, h3 {
+legend, form, input, h1, h3, h4 {
     justify-content: center;
     align-content: center;
 }
@@ -13,14 +13,29 @@ form {
     flex-wrap: wrap;
 }
 
-input {
+input, select {
     padding: 0.5em;
     margin: 1em;
+    justify-content: center;
+    align-content: center;
 }
 
 #map {
     margin: 0.5em;
     width: 100%;
+}
+
+#submitButton {
+    border-style: solid;
+    border-color: #12AE98;
+    border-width: 3px;
+    box-shadow: 0 10px 6px -6px #777;
+}
+
+#results {
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-content: center;
 }
 
 .userInputs {
