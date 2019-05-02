@@ -29,7 +29,7 @@ input, select {
     border-style: solid;
     border-color: #12AE98;
     border-width: 3px;
-    box-shadow: 0 10px 6px -6px #777;
+    box-shadow: 0 10px 6px -6px;
 }
 
 #results {

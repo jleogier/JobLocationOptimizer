@@ -101,22 +101,46 @@ $(function() {
             // Gets User Input
             let userInputCountry = $('#userInputCountry').val();
             let userInputCity = $('#userInputCity').val().trim();
+
+
+            let userInputCountry2 = $('#userInputCountry2').val();
+            let userInputCity2 = $('#userInputCity2').val().trim();
+
+
             let jobCategory = $('#userInputJobCategory').val();
 
             // Logs User Input
             console.log('Submit Button was clicked');
             console.log('This is the captured User Input for the COUNTRY:', userInputCountry);
             console.log('This is the captured User Input for the CITY:', userInputCity);
+
+            console.log('This is the captured User Input for the 2nd COUNTRY:', userInputCountry2);
+            console.log('This is the captured User Input for the 2nd CITY:', userInputCity2);
+
+
             console.log('This is the captured User Input for the JOB CATEGORY:', jobCategory);
 
             $('#results').html('');
 
             // Does the things
+
+            //Makes first call
+
             getAdzunaJobHistory (userInputCountry, userInputCity, jobCategory)
             .then(data => displayAdzunaJobHistory(data));
 
             getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory)
             .then(data => displayAdzunaJobSearch(data));
+
+            // Makes second call  
+
+            getAdzunaJobHistory (userInputCountry2, userInputCity2, jobCategory)
+            .then(data => displayAdzunaJobHistory(data));
+
+            getAdzunaJobSearch (userInputCountry2, userInputCity2, jobCategory)
+            .then(data => displayAdzunaJobSearch(data));
+
+
         });
     }
     submitHandler();
