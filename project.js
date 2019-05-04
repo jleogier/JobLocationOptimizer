@@ -88,9 +88,9 @@ $(function() {
 
         // ADD SORT FUNCTIONALITY 
 
-        let sortedMonths = Object.keys.sort((month));   // BROKEN HELP!!!!!!
+        // let sortedMonths = Object.keys.sort((month));   // BROKEN HELP!!!!!!
 
-        return `<li>${sortedMonths} salary: ${salary}</li>`
+        return `<li>${month} salary: ${salary}</li>`
     }
 
 
