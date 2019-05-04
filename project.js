@@ -11,7 +11,8 @@ $(function() {
 
     // Gets general Job Search Data
     function getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory){
-        let AdzunaJobSearchResponse = ADZUNA_BASE_URL + `jobs/${userInputCountry}/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_KEY}&where=${userInputCity}&category=${jobCategory}&content-type=application/json`;
+        let AdzunaJobSearchResponse = ADZUNA_BASE_URL +
+        `jobs/${userInputCountry}/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_KEY}&where=${userInputCity}&category=${jobCategory}&content-type=application/json`;
 
         console.log('The Job Search Response URL is:', AdzunaJobSearchResponse);
 
@@ -42,7 +43,8 @@ $(function() {
     // Gets Job History Data
     function getAdzunaJobHistory (userInputCountry, userInputCity, jobCategory) {
         
-        let adzunaHistoryResponse = ADZUNA_BASE_URL + `jobs/${userInputCountry}/history?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_KEY}&where=${userInputCity}&category=${jobCategory}&content-type=application/json`;
+        let adzunaHistoryResponse = ADZUNA_BASE_URL +
+        `jobs/${userInputCountry}/history?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_KEY}&where=${userInputCity}&category=${jobCategory}&content-type=application/json`;
 
         console.log('The History Response URL is:', adzunaHistoryResponse);
 
@@ -60,7 +62,7 @@ $(function() {
         console.log('JSON results from History call:', data);
 
         if (data && data.month) {
-            $('#results').append(historyHTML(data.month));
+            $('#results').append(historyHTML(data.month)); // Add location info here somewhere and somehow
         } 
     }
 
@@ -86,7 +88,9 @@ $(function() {
 
         // ADD SORT FUNCTIONALITY 
 
-        return `<li>${month} salary: ${salary}</li>`
+        let sortedMonths = Object.keys.sort((month));   // BROKEN HELP!!!!!!
+
+        return `<li>${sortedMonths} salary: ${salary}</li>`
     }
 
 
