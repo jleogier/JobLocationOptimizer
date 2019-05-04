@@ -5,7 +5,7 @@ $(function() {
     const GMAPS_API_KEY = 'AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI';
     
 
-    const ADZUNA_BASE_URL = 'http://api.adzuna.com/v1/api/';
+    const ADZUNA_BASE_URL = 'https://api.adzuna.com/v1/api/';
     const ADZUNA_KEY = 'b22271cad1b74c76f8c6ec3587c34e86';
     const ADZUNA_APP_ID = 'e76d0c45';
 
