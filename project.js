@@ -94,6 +94,17 @@ $(function() {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
     // Submit Button 
 
     function submitHandler () {
@@ -145,8 +156,14 @@ $(function() {
             .then(data => displayAdzunaJobSearch(data));
 
 
+            // getsGmapsLoc (userInputCountry2, userInputCity2)
+            // .then(data => /** heatmapfunction */ )
+
         });
     }
+
+
+
     submitHandler();
 });
 
@@ -194,3 +211,165 @@ function initMap() {
     }
 
 var map;
+
+
+
+// https://maps.googleapis.com/maps/api/geocode/json?address=Mountain+View,+CA&key=AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI
+// https://maps.googleapis.com/maps/api/geocode/json?address=Los+Angeles,+us&key=AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI
+
+
+function getsGmapsLoc (userInputCountry, userInputCity){
+    
+    let GMAPS_RESPONSE = GMAPS_GEOCODE_URL + `addess=${userInputCity},+${userInputCountry}&key=${GMAPS_API_KEY}`
+    console.log('GMAPS JSON URL RESPONSE:', GMAPS_RESPONSE);
+
+    return fetch (GMAPS_RESPONSE)
+    .then (response => response.json())
+    
+
+}
+
+
+
+
+
+
+
+
+var heatMapData = [
+    new google.maps.LatLng(37.785, -122.439),
+    {location: new google.maps.LatLng(37.785, -122.437), weight: 2},
+    {location: new google.maps.LatLng(37.785, -122.435), weight: 3}
+  ];
+  
+  var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
+  
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: sanFrancisco,
+    zoom: 13,
+    mapTypeId: 'satellite'
+  });
+  
+  var heatmap = new google.maps.visualization.HeatmapLayer({
+    data: heatMapData
+  });
+  heatmap.setMap(map);
+
+
+
+
+
+/* Data points defined as a mixture of WeightedLocation and LatLng objects */
+// var heatMapData = [
+//     {location: new google.maps.LatLng(37.782, -122.447), weight: 0.5},
+//     new google.maps.LatLng(37.782, -122.445),
+//     {location: new google.maps.LatLng(37.782, -122.443), weight: 2},
+//     {location: new google.maps.LatLng(37.782, -122.441), weight: 3},
+//     {location: new google.maps.LatLng(37.782, -122.439), weight: 2},
+//     new google.maps.LatLng(37.782, -122.437),
+//     {location: new google.maps.LatLng(37.782, -122.435), weight: 0.5},
+  
+//     {location: new google.maps.LatLng(37.785, -122.447), weight: 3},
+//     {location: new google.maps.LatLng(37.785, -122.445), weight: 2},
+//     new google.maps.LatLng(37.785, -122.443),
+//     {location: new google.maps.LatLng(37.785, -122.441), weight: 0.5},
+//     new google.maps.LatLng(37.785, -122.439),
+//     {location: new google.maps.LatLng(37.785, -122.437), weight: 2},
+//     {location: new google.maps.LatLng(37.785, -122.435), weight: 3}
+//   ];
+  
+//   var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
+  
+//   map = new google.maps.Map(document.getElementById('map'), {
+//     center: sanFrancisco,
+//     zoom: 13,
+//     mapTypeId: 'satellite'
+//   });
+  
+//   var heatmap = new google.maps.visualization.HeatmapLayer({
+//     data: heatMapData
+//   });
+//   heatmap.setMap(map);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ADD LINEAR REGRESSION - CURRENTLY BROKEN FOR NO REASON: 
+// https://dracoblue.net/dev/linear-least-squares-in-javascript/
+
+
+
+
+// function findLineByLeastSquares(values_x, values_y) {
+//     var sum_x = 0;
+//     var sum_y = 0;
+//     var sum_xy = 0;
+//     var sum_xx = 0;
+//     var count = 0;
+
+//     /*
+//      * We'll use those variables for faster read/write access.
+//      */
+//     var x = 0;
+//     var y = 0;
+//     var values_length = values_x.length;
+
+//     if (values_length != values_y.length) {
+//         throw new Error('The parameters values_x and values_y need to have same size!');
+//     }
+
+//     /*
+//      * Nothing to do.
+//      */
+//     if (values_length === 0) {
+//         return [ [], [] ];
+//     }
+
+//     /*
+//      * Calculate the sum for each of the parts necessary.
+//      */
+//     for (var v = 0; v &lt; values_length; v++) {
+//         x = values_x[v];
+//         y = values_y[v];
+//         sum_x += x;
+//         sum_y += y;
+//         sum_xx += x*x;
+//         sum_xy += x*y;
+//         count++;
+//     }
+
+//     /*
+//      * Calculate m and b for the formular:
+//      * y = x * m + b
+//      */
+//     var m = (count*sum_xy - sum_x*sum_y) / (count*sum_xx - sum_x*sum_x);
+//     var b = (sum_y/count) - (m*sum_x)/count;
+
+//     /*
+//      * We will make the x and y result line now
+//      */
+//     var result_values_x = [];
+//     var result_values_y = [];
+
+//     for (var v = 0; v &lt; values_length; v++) {
+//         x = values_x[v];
+//         y = x * m + b;
+//         result_values_x.push(x);
+//         result_values_y.push(y);
+//     }
+
+//     return [result_values_x, result_values_y];
+// }
