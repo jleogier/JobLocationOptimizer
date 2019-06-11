@@ -25,7 +25,7 @@ $(function() {
     }
 
 
-    // Converts Total Count and Salary Mean response into HTML
+    // Converts Total Job Count and Salary Mean response into HTML
     function jobCountSalaryHTML (data) {
 
         return `
@@ -58,7 +58,7 @@ $(function() {
             // NETWORK OK BUT WEB ERROR
             return Promise.reject (response.body)
         })
-        .catch(err => console.log('Error from Gmaps for Geocoding', err))
+        .catch(err => console.log('Error from Gmaps for Geocoding:', err))
         .then (data => {console.log('Google Maps ', data)
             return data
         })
@@ -81,7 +81,7 @@ $(function() {
 
 
     // Calculates the Center of the two locations selected by the user
-    function cenCalc (loc1, loc2) {
+    function getCentOfTwoLocs (loc1, loc2) {
         // Obtains Latitude for Locations 1 & 2
         let lat1 = loc1.latitude;
         let lat2 = loc2.latitude;
@@ -154,34 +154,37 @@ $(function() {
             // DOES THE MAIN SUBMIT HANDLER THINGS
 
             // Makes 1st call to get job data based on user selected location
-            city1jobs = getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory)
+            let city1jobs = getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory)
             // Displays Job data (Salary Mean and Total Available Count)
-            .then(data => displayAdzunaJobSearch(data))
-            // GeoCodes user 1st selected locations
-            .then(userInputCountry, userInputCity => geoCodesLoc(userInputCountry, userInputCity))            
+            .then(data => {
+                displayAdzunaJobSearch(data)
+                // GeoCodes user 1st selected locations
+                return geoCodesLoc(userInputCountry, userInputCity)            
+            })
 
 
             // Makes 2nd call to get job data based on user selected location
-            city2jobs = getAdzunaJobSearch (userInputCountry2, userInputCity2, jobCategory)
+            let city2jobs = getAdzunaJobSearch (userInputCountry2, userInputCity2, jobCategory)
             // Displays Job data (Salary Mean and Total Available Count)
-            .then(data => displayAdzunaJobSearch(data))
-            // GeoCodes user 2nd selected location
-            .then(userInputCountry2, userInputCity2 => geoCodesLoc(userInputCountry2, userInputCity2))
+            .then(data => {
+                displayAdzunaJobSearch(data)
+                // GeoCodes user 2nd selected location
+                return geoCodesLoc(userInputCountry2, userInputCity2)
+            })
+
 
 
             let promises = [city1jobs, city2jobs];
             Promise.all(promises)
             .catch (err => console.log('All Promises did not work', err))
             // Takes the GeoCodes and calculates the center of the two locations
-            .then (city1jobs, city2jobs => cenCalc (city1jobs, city2jobs))
+            .then (getCentOfTwoLocs)
             // Uses new coordinates to center map on new coordinates
-            .then (coordinates => centerMap(coordinates))
+            .then (centerMap)
         });
     }
     submitHandler();
 });
-
-
 
 
 
