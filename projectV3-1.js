@@ -5,6 +5,9 @@ $(function() {
     const ADZUNA_KEY = 'b22271cad1b74c76f8c6ec3587c34e86';
     const ADZUNA_APP_ID = 'e76d0c45';
 
+    const GMAPS_GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json?'
+    const GMAPS_API_KEY = 'AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI';
+
     // Gets general Job Search Data: Total Count + Salary Mean
     function getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory){
         let AdzunaJobSearchResponse = ADZUNA_BASE_URL +
@@ -22,7 +25,7 @@ $(function() {
     }
 
 
-    // Converts Total Count and Salary Mean response into HTML
+    // Converts Total Job Count and Salary Mean response into HTML
     function jobCountSalaryHTML (data) {
 
         return `
@@ -42,44 +45,77 @@ $(function() {
         }
     }
 
-    function getsGmapsLoc (userInputCountry, userInputCity){
+    function geoCodesLoc (userInputCountry, userInputCity){
     
         let GMAPS_RESPONSE = GMAPS_GEOCODE_URL + `addess=${userInputCity},+${userInputCountry}&key=${GMAPS_API_KEY}`
         console.log('GMAPS JSON URL RESPONSE:', GMAPS_RESPONSE);
     
         return fetch (GMAPS_RESPONSE)
-        .then (response => response.json())
-        .then (data => console.log(data))
+        .then (response => {
+            if (response.ok) {
+                return response.json()
+            }            
+            // NETWORK OK BUT WEB ERROR
+            return Promise.reject (response.body)
+        })
+        .catch(err => console.log('Error from Gmaps for Geocoding:', err))
+        .then (data => {console.log('Google Maps ', data)
+            return data
+        })
         .then (data => latLngGetter(data))
-        .then (new google.maps.LatLng(data[0], data[1]))
-        .catch(err => console.log(err));
     }
 
-    // https://maps.googleapis.com/maps/api/geocode/json?address=Seattle,+us&key=AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI
-
-    // https://maps.googleapis.com/maps/api/geocode/json?address=Denver,+us&key=AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI
-
-    // .then (data => displayLocation(data));
-
-    // function displayLocation (data){
-    //     console.log(data);
-
-    //     $('#results').append(`
-    //     <div>${data.results[0].formatted_address}</div>
-    //     `);
-
-    // }
-
-
     function latLngGetter (data) {
-        let latitude = results[0].geometry.location.lat;
-        let longitude = results[0].geometry.location.lng;
+        let latitude = data[0].geometry.location.lat;
+        let longitude = data[0].geometry.location.lng;
+        
+        console.log('The obtained Latitude is', latitude);
+        console.log('The obtained Longitude is', longitude);
+        
+        let latLngLoc = {latitude, longitude};
 
-        let latLngLoc = [latitude, longitude];
+        console.log ('The Latitude and Longitude Oject Location is representated as such:', latLngLoc)
 
         return latLngLoc
     }
 
+
+    // Calculates the Center of the two locations selected by the user
+    function getCentOfTwoLocs (loc1, loc2) {
+        // Obtains Latitude for Locations 1 & 2
+        let lat1 = loc1.latitude;
+        let lat2 = loc2.latitude;
+
+        // Obtains Longitude for Locations 1 & 2
+        let lng1 = loc1.longitude;
+        let lng2 = loc2.longitude;
+
+        // Calculates Center of Latitude and Longitude coordinates respectively
+        let latCen = computeDistanceBetween(lat1, lat2) / 2;
+        let lngCen = computeDistanceBetween(lng1, lng2) / 2;
+
+        // Logs results
+        console.log('Computated Latitude center is:', latCen);
+        console.log('Computated Longitude center is:', lngCen);
+
+        latLngCen = {latCen, lngCen}
+
+        console.log ('The Latitude and Longitude CENTER Oject Location is representated as such:', latLngCen);
+
+        return latlngCen
+    }
+
+
+    // Centers the map equidistance from the two locations selected by the user
+    function centerMap (coordinatesObj) {
+        
+        let geoCenLat = coordinatesObj.latCen;
+        let geoCenLng = coordinatesObj.lngCen;
+        
+        let GMLL = new google.maps.LatLng(geoCenLat, geoCenLng) // GMLL = Google Maps Latitude and Longitude
+        
+        return GMLL
+    }
 
 
     // Submit Button 
@@ -99,7 +135,7 @@ $(function() {
             let userInputCountry2 = $('#userInputCountry2').val();
             let userInputCity2 = $('#userInputCity2').val().trim();
 
-            // OBTAIN USER INPUT: JOB CATEGORY
+            // OBTAIN USER JOB CATEGORY
             let jobCategory = $('#userInputJobCategory').val();
 
             // Logs User Input selection
@@ -117,129 +153,38 @@ $(function() {
 
             // DOES THE MAIN SUBMIT HANDLER THINGS
 
-            cities = [];
-
-            // let city1history = getAdzunaJobHistory (userInputCountry, userInputCity, jobCategory)
-            // .then(data => displayAdzunaJobHistory(data))
-            // .then(json => {
-            //     cities[0] ? cities[0].history = data : cities[0] = {history: data}; 
-            //     return data;
-            // });
-
-            // Makes first call 
-            city1jobs = getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory)
-            .then(userInputCountry, userInputCity => getsGmapsLoc(userInputCountry, userInputCity))
-            .then(data => displayAdzunaJobSearch(data))
-            // .then(json => cities[0] ? cities[0].jobs = data : cities[0] = {jobs: data} );
+            // Makes 1st call to get job data based on user selected location
+            let city1jobs = getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory)
+            // Displays Job data (Salary Mean and Total Available Count)
+            .then(data => {
+                displayAdzunaJobSearch(data)
+                // GeoCodes user 1st selected locations
+                return geoCodesLoc(userInputCountry, userInputCity)            
+            })
 
 
-
-            // Makes second call  
-            city2jobs = getAdzunaJobSearch (userInputCountry2, userInputCity2, jobCategory)
-            .then(userInputCountry2, userInputCity2 => getsGmapsLoc(userInputCountry2, userInputCity2))
-            .then(data => displayAdzunaJobSearch(data))
-
-
-            // let promises = [city1history, city1jobs, city2history, city2jobs];
-
-            // Promise.all(promises).then(results =>{
-                
-            // })
-            // .catch( err => {
-            //     console.log("One or more promises failed between city1 and city2 job and history searches.");
-            //     console.error(err);
-            // })
+            // Makes 2nd call to get job data based on user selected location
+            let city2jobs = getAdzunaJobSearch (userInputCountry2, userInputCity2, jobCategory)
+            // Displays Job data (Salary Mean and Total Available Count)
+            .then(data => {
+                displayAdzunaJobSearch(data)
+                // GeoCodes user 2nd selected location
+                return geoCodesLoc(userInputCountry2, userInputCity2)
+            })
 
 
-            // getsLocInput (userInputCountry2, userInputCity2)
-            // .then(data => /** heatmapfunction */ )
 
+            let promises = [city1jobs, city2jobs];
+            Promise.all(promises)
+            .catch (err => console.log('All Promises did not work', err))
+            // Takes the GeoCodes and calculates the center of the two locations
+            .then (getCentOfTwoLocs)
+            // Uses new coordinates to center map on new coordinates
+            .then (centerMap)
         });
     }
     submitHandler();
 });
-
-
-const GMAPS_GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json?'
-const GMAPS_API_KEY = 'AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI';
-
-
-
-    /**** GENERAL MAP CONTROL FUNCTIONS FOR UI  ********/
-
-    // input: array of objects with location: keys which are google maps LatLng objects
-    // output: Lat Long Coordinate for map
-    // Needs argument that takes Array that have Object Coordinates
-    function centerCoordOfLocations () {
-
-
-
-        // calculate the topmost, leftmost, rightmost, and bottom-most lat/long coords of all results
-        // make a new box with that toppest, rightest, etc..
-        // find the center of that new box
-        // left + (right-left/2), bottom + (top-bottom/2)
-    }
-
-
-    // input: array of objects with location: keys which are google maps LatLng objects
-    // output: none
-    // side effect: contact map and tell it to center on coord
-    function centerMapOnLocations () {
-        // call centerCoordOfGroup() to get the actual coord
-        // then call the map to center on that coord
-    }
-
-
-    /**** DATA SPECIFIC FUNCTIONS  ******/
-
-    function coordForSearchResult(result){
-        if (!result) return;
-
-        let lat = 0;// some data inside result like result.location.latitude
-        let lng = 0;// some data inside result like result.location.longitude
-
-        // parse job search results
-        if( result.type == "jobSearch" ){
-            lat = result.job.location.lat;
-        }
-
-        // parse city results
-        if( result.type == "citySearch" ){
-            lat = result.city.latitude;
-        }
-
-        return new google.maps.LatLng(lat, lng)
-    }
-
-
-    // input: many search results
-    // output: many coordinate object as google LatLng()
-    function locationsForSearchResults(results){
-        return data.map(function(result){
-            return { 
-                location: coordForSearchResult(result),
-                weight: 1 
-            };
-        });
-    }
-    
-
-    // input: raw adzuna data
-    // output: none
-    // side effects: adding pins to map/heatmap
-    function addResultsToMap(data){
-        if( map && data && data.length ){
-
-            let coords = locationsForSearchResults(data);
-
-            centerMapOnLocations(coords);
-              
-            var heatmap = new google.maps.visualization.HeatmapLayer({
-                data: coords
-            });
-            heatmap.setMap(map);
-        } 
-    }
 
 
 
@@ -277,23 +222,7 @@ function initMap() {
 var map;
 
 
-
-// https://maps.googleapis.com/maps/api/geocode/json?address=Mountain+View,+CA&key=AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI
-// https://maps.googleapis.com/maps/api/geocode/json?address=Los+Angeles,+us&key=AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI
-
-
-// function getsGmapsLoc (userInputCountry, userInputCity){
-    
-//     let GMAPS_RESPONSE = GMAPS_GEOCODE_URL + `addess=${userInputCity},+${userInputCountry}&key=${GMAPS_API_KEY}`
-//     console.log('GMAPS JSON URL RESPONSE:', GMAPS_RESPONSE);
-
-//     return fetch (GMAPS_RESPONSE)
-//     .then (response => response.json())
-    
-
-// }
-
-
+// Heat Map Stuff??
 
 
 
