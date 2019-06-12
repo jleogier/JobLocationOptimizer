@@ -95,7 +95,7 @@ $(function() {
 
         // Calculates Center of Latitude and Longitude coordinates respectively
 
-        // PROBLEM: NEED TO LOAD GMAPS GEOMETRY LIBRARY to recognize computeDistanceBetween() https://developers.google.com/maps/documentation/javascript/geometry
+        // PROBLEM: NEED TO LOAD GMAPS GEOMETRY LIBRARY to recognize computeDistanceBetween() https://developers.google.com/maps/documentation/javascript/geometry   HELP!!!!!!!!!
 
         let latCen = computeDistanceBetween(lat1, lat2) / 2;
         let lngCen = computeDistanceBetween(lng1, lng2) / 2;
@@ -229,7 +229,9 @@ function initMap() {
 var map;
 
 
-// Heat Map Stuff??
+
+
+// Heat Map Stuff??  ---- Ignore for now
 
 
 
