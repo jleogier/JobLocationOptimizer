@@ -165,7 +165,7 @@ $(function() {
             .then(data => {
                 displayAdzunaJobSearch(data)
                 // GeoCodes user 1st selected locations
-                return geoCodesLoc(userInputCountry, userInputCity)            
+                return geoCodesLoc(userInputCountry, userInputCity)
             })
 
 
