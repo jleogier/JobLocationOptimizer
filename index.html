@@ -56,7 +56,7 @@
             <option value="za">South Africa</option>
         </select>
 
-        <input id="userInputCity" class="userInputs" type="text" placeholder="City: e,g Los Angeles" autofocus required value=Denver>
+        <input id="userInputCity" class="userInputs" type="text" placeholder="City: e,g Los Angeles" autofocus required value="Los Angeles">
 
         <h3>Select 2nd Location</h3>
         <select id="userInputCountry2" class="userInputs">
@@ -78,7 +78,7 @@
             <option value="za">South Africa</option>
         </select>
 
-        <input id="userInputCity2" class="userInputs" type="text" placeholder="City: e,g Seattle" required value=Seattle>
+        <input id="userInputCity2" class="userInputs" type="text" placeholder="City: e,g Seattle" required value="Seattle">
 
         <h3>Select Job Category</h3>
         <select id="userInputJobCategory" class="userInputs">
@@ -121,15 +121,9 @@
     <h4>Here is a heat map showing the selected job category's density</h4>
 
 <div id="map"></div>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>   
     <script src="projectV3-1.js"></script>
-
-
-    <!-- Heatmap GMAPS -->
-    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization&callback=initMap"></script> -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI&callback=initMap" async defer></script>
-    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI&callback=initMap&libraries=geometry,visualization" async defer></script>
 </body>
 
 </html>

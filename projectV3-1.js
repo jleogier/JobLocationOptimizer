@@ -45,9 +45,10 @@ $(function() {
         }
     }
 
+    // GeoCodes location selected by user
     function geoCodesLoc (userInputCountry, userInputCity){
-    
-        let GMAPS_RESPONSE = GMAPS_GEOCODE_URL + `addess=${userInputCity},+${userInputCountry}&key=${GMAPS_API_KEY}`
+
+        let GMAPS_RESPONSE = GMAPS_GEOCODE_URL + `address=${userInputCity}+${userInputCountry}&key=${GMAPS_API_KEY}`
         console.log('GMAPS JSON URL RESPONSE:', GMAPS_RESPONSE);
     
         return fetch (GMAPS_RESPONSE)
@@ -59,38 +60,43 @@ $(function() {
             return Promise.reject (response.body)
         })
         .catch(err => console.log('Error from Gmaps for Geocoding:', err))
-        .then (data => {console.log('Google Maps ', data)
+        .then (data => {console.log('Google Maps JSON response:', data)
             return data
         })
         .then (data => latLngGetter(data))
     }
 
+    // Obtains the Lattitude and Longitude
     function latLngGetter (data) {
-        let latitude = data[0].geometry.location.lat;
-        let longitude = data[0].geometry.location.lng;
+        let latitude = data.results[0].geometry.location.lat;
+        let longitude = data.results[0].geometry.location.lng;
         
         console.log('The obtained Latitude is', latitude);
         console.log('The obtained Longitude is', longitude);
         
         let latLngLoc = {latitude, longitude};
 
-        console.log ('The Latitude and Longitude Oject Location is representated as such:', latLngLoc)
+        console.log ('The Latitude and Longitude Object Location is representated as such:', latLngLoc)
 
         return latLngLoc
     }
 
 
     // Calculates the Center of the two locations selected by the user
-    function getCentOfTwoLocs (loc1, loc2) {
+    function getCentOfTwoLocs (locationsArr) {
+        
         // Obtains Latitude for Locations 1 & 2
-        let lat1 = loc1.latitude;
-        let lat2 = loc2.latitude;
+        let lat1 = locationsArr[0].latitude;
+        let lat2 = locationsArr[1].latitude;
 
         // Obtains Longitude for Locations 1 & 2
-        let lng1 = loc1.longitude;
-        let lng2 = loc2.longitude;
+        let lng1 = locationsArr[0].longitude;
+        let lng2 = locationsArr[1].longitude;
 
         // Calculates Center of Latitude and Longitude coordinates respectively
+
+        // PROBLEM: NEED TO LOAD GMAPS GEOMETRY LIBRARY to recognize computeDistanceBetween() https://developers.google.com/maps/documentation/javascript/geometry
+
         let latCen = computeDistanceBetween(lat1, lat2) / 2;
         let lngCen = computeDistanceBetween(lng1, lng2) / 2;
 
@@ -155,7 +161,7 @@ $(function() {
 
             // Makes 1st call to get job data based on user selected location
             let city1jobs = getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory)
-            // Displays Job data (Salary Mean and Total Available Count)
+            // Displays Job data (Salary Mean and Total Available Job Count)
             .then(data => {
                 displayAdzunaJobSearch(data)
                 // GeoCodes user 1st selected locations
@@ -165,7 +171,7 @@ $(function() {
 
             // Makes 2nd call to get job data based on user selected location
             let city2jobs = getAdzunaJobSearch (userInputCountry2, userInputCity2, jobCategory)
-            // Displays Job data (Salary Mean and Total Available Count)
+            // Displays Job data (Salary Mean and Total Available Job Count)
             .then(data => {
                 displayAdzunaJobSearch(data)
                 // GeoCodes user 2nd selected location
@@ -176,7 +182,10 @@ $(function() {
 
             let promises = [city1jobs, city2jobs];
             Promise.all(promises)
-            .catch (err => console.log('All Promises did not work', err))
+            .catch (err => console.log('All Promises did not work, the error is:', err))
+            .then (data => {console.log('This is the Lat/Lng Object:', data)            
+                return data
+            })
             // Takes the GeoCodes and calculates the center of the two locations
             .then (getCentOfTwoLocs)
             // Uses new coordinates to center map on new coordinates
@@ -185,8 +194,6 @@ $(function() {
     }
     submitHandler();
 });
-
-
 
 
 // Initializes Map 
