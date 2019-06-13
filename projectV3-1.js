@@ -131,8 +131,6 @@ $(function() {
 
     // Centers the map equidistance from the two locations selected by the user
     function centerMap (coordinatesObj) {
-
-        console.log('Please have the right data here:', coordinatesObj);
         
         let geoCenLat = coordinatesObj.latCen;
         let geoCenLng = coordinatesObj.lngCen;
@@ -250,7 +248,7 @@ $(function() {
                 return getCentOfTwoLocs (data)})
             // Uses new coordinates to center map on new coordinates
             .then (data => {
-                console.log ('Center Lat/Lng being passed to actually center the map:', data)
+                console.log ('Center Lat/Lng being passed to center the map:', data)                
                 
                 return centerMap(data)})
         });
