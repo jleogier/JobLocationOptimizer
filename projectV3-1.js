@@ -21,7 +21,7 @@ $(function() {
             }
         })
         .then (response => response.json())
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
     }
 
 
@@ -55,11 +55,11 @@ $(function() {
         .then (response => {
             if (response.ok) {
                 return response.json()
-            }            
+            }
             // NETWORK OK BUT WEB ERROR
             return Promise.reject (response.body)
         })
-        .catch(err => console.log('Error from Gmaps for Geocoding:', err))
+        .catch(err => console.error('Error from Gmaps for Geocoding:', err))
         .then (data => {console.log('Google Maps JSON response:', data)
             return data
         })
@@ -97,22 +97,6 @@ $(function() {
         console.log('Lat2/Lng2', lat2, lng2);
 
         // Calculates Center of Latitude and Longitude coordinates respectively
-
-        // PROBLEM: NEED TO LOAD GMAPS GEOMETRY LIBRARY to recognize computeDistanceBetween() https://developers.google.com/maps/documentation/javascript/geometry   HELP!!!!!!!!!
-        // Can delete below commented OG code:
-
-        // let latCen = computeDistanceBetween(lat1, lat2) / 2;
-        // let lngCen = computeDistanceBetween(lng1, lng2) / 2;
-
-        // TC solution: 
-
-        // getting closer but still doesn't work. 
-
-        
-        // let latCen = google.maps.geometry.spherical.computeDistanceBetween(lat1, lat2);
-        // let lngCen = google.maps.geometry.spherical.computeDistanceBetween(lng1, lng2);
-        
-        // Can't figure out how to use Google API to calculate midpoint. Going old school and calculating it regular style        
         
         let latCen = (lat1 + lat2) / 2;
         let lngCen = (lng1 + lng2) / 2;
@@ -137,14 +121,28 @@ $(function() {
         
         console.log('This is the GeoCenLat:' , geoCenLat);
         console.log('This is the geoCenLng:' , geoCenLng);
+
+
+        // OG working code:
         
-        let GMLL = new google.maps.LatLng(geoCenLat, geoCenLng) // GMLL = Google Maps Latitude and Longitude
+        let GMLL = new google.maps.LatLng(geoCenLat, geoCenLng); // GMLL = Google Maps Latitude and Longitude
 
-        console.log ('The Map should be centered now! If it is not, something went wrong. This the map... Object?', GMLL)
+        // Zoom level needs to be fixed so that it still shows both locations ---- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        return map.setCenter(GMLL)
+        console.log ('This is the Map Lat/Long... Object?', GMLL);
+
+        map.setCenter(GMLL);
+
+        // Final should return GMLL
+
     }
 
+
+    // Add Map Marker
+
+    function mapMarker () {
+
+    }
 
     // Submit Button 
 
@@ -181,7 +179,7 @@ $(function() {
 
             // DOES THE MAIN SUBMIT HANDLER THINGS
 
-            // Makes 1st call to get job data based on user selected location
+            // Makes 1st call to get and display job data based on user selected location and returns GeoCode for 1st Location
             let city1jobs = getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory)
             // Displays Job data (Salary Mean and Total Available Job Count)
             .then(data => {
@@ -191,7 +189,7 @@ $(function() {
             })
 
 
-            // Makes 2nd call to get job data based on user selected location
+            // Makes 2nd call to get and display job data based on user selected location and returns GeoCode for 2nd Location
             let city2jobs = getAdzunaJobSearch (userInputCountry2, userInputCity2, jobCategory)
             // Displays Job data (Salary Mean and Total Available Job Count)
             .then(data => {
@@ -200,50 +198,16 @@ $(function() {
                 return geoCodesLoc(userInputCountry2, userInputCity2)
             })
 
-            // From TC: 
-
-            /**
-             * 
-             * let promises = [city1jobs, city2jobs];
-            Promise.all(promises)
-            .catch (err => console.log('All Promises did not work, the error is:', err))
-            .then (data => {console.log('This is the Lat/Lng Object:', data)
-                return data
-            })
-            // Takes the GeoCodes and calculates the center of the two locations
-            .then(data => {
-              getCentOfTwoLocs(data);
-            })
-            // Uses new coordinates to center map on new coordinates
-            .then(centerMap)
-             * 
-             * 
-             */
-
-            // OG Code that doesn't work:
-
-            // let promises = [city1jobs, city2jobs];
-            // Promise.all(promises)
-            // .catch (err => console.log('All Promises did not work, the error is:', err))
-            // .then (data => {console.log('This is the Lat/Lng Object:', data)            
-            //     return data
-            // })
-            // // Takes the GeoCodes and calculates the center of the two locations
-            // .then (getCentOfTwoLocs)
-            // // Uses new coordinates to center map on new coordinates
-            // .then (centerMap)
-
-
-            // Corrected w/ TC
-            let promises = [city1jobs, city2jobs];
-            Promise.all(promises)
-            .catch (err => console.log('All Promises did not work, the error is:', err))
+            // Brings both GeoCoded locations together to find center and re-centers map on new coordinates
+            let locationPromises = [city1jobs, city2jobs];
+            Promise.all(locationPromises)
+            .catch (err => console.error('All location Promises did not work, the error is:', err))
             .then (data => {console.log('This is the Lat/Lng Array of Objects:', data)            
                 return data
             })
             // Takes the GeoCodes and calculates the center of the two locations
             .then (data => { 
-                console.log ('All promises are working, and the data (Lat/Lng Array of Obj) is being passed to get the center of two locations', data)
+                console.log ('All location Promises are working, and the data (Lat/Lng Array of Obj) is being passed to get the center of two locations', data)
                 
                 return getCentOfTwoLocs (data)})
             // Uses new coordinates to center map on new coordinates
@@ -251,6 +215,10 @@ $(function() {
                 console.log ('Center Lat/Lng being passed to center the map:', data)                
                 
                 return centerMap(data)})
+            
+            // Once map is centered, add heat map visualization .then(stuff)
+
+
         });
     }
     submitHandler();
@@ -287,12 +255,19 @@ function initMap() {
         }
     }
 
-var map;
+
+
+// Pretty sure I don't need this: 
+// var map;
+
+
+
+// Circle drawer sample https://developers.google.com/maps/documentation/javascript/examples/circle-simple
 
 
 
 
-// Heat Map Stuff??  ---- Ignore for now
+// Heat Map Stuff
 
 
 

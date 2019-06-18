@@ -1,6 +1,7 @@
-body * {
+form {
     display: flex;
-    padding: 0.5em;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 
 legend, form, input, h1, h3, h4 {
@@ -8,21 +9,11 @@ legend, form, input, h1, h3, h4 {
     align-content: center;
 }
 
-form {
-    flex-direction: column;
-    flex-wrap: wrap;
-}
-
 input, select {
     padding: 0.5em;
     margin: 1em;
     justify-content: center;
     align-content: center;
-}
-
-#map {
-    margin: 0.5em;
-    width: 100%;
 }
 
 #submitButton {
