@@ -1,0 +1,21 @@
+{
+  "name": "job-location-optimizer",
+  "version": "1.0.0",
+  "description": "Job Loc Project",
+  "main": "project.js",
+  "scripts": {
+    "test": "testing 123"
+  },
+  "keywords": [
+    "Thinkful",
+    "Project",
+    "API"
+  ],
+  "author": "Jeremy Le-Ogier",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.3"
+  }
+}
