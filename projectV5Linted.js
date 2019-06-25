@@ -34,20 +34,19 @@ $(function () {
 
 
     // Converts Total Job Count and Salary Mean response into HTML
-    function resultsHTML(countAndLocArr) {
+    function resultsHTML(jobsAndLocData) {
 
-        console.log('This is the data being passed before displaying the results. Should be an Array', countAndLocArr);
-        console.log('Now I have to try to work with it somehow. Here are the attempts:', Promise.resolve(countAndLocArr[0].PromiseValue));
+        console.log('This is the data being passed before displaying the results in HTML. Should be an Array:', jobsAndLocData);
 
         return `
                 <label>Location
-                    <span>${countAndLocArr[1].formatted_address}</span>
+                    <span>${jobsAndLocData[1].results[0].formatted_address}</span>
                 </label>
                 <label>Job Count
-                    <span>${countAndLocArr[0].count}</span>
+                    <span>${jobsAndLocData[0].count}</span>
                 </label>
                 <label>Salary Mean
-                    <span>${countAndLocArr[0].mean}</span>
+                    <span>${jobsAndLocData[0].mean}</span>
                 </label>`;
     }
 
@@ -81,14 +80,14 @@ $(function () {
 
 
     // Calculates the Center of the two locations selected by the user
-    function getCentOfTwoLocs(locArr) {
+    function getCentOfTwoLocs(jobsAndLocData) {
         // Obtains Latitude for Locations 1 & 2
-        const lat1 = locArr[0].results[0].geometry.location.lat;
-        const lat2 = locArr[1].results[0].geometry.location.lat;
+        const lat1 = jobsAndLocData[0][1].results[0].geometry.location.lat;
+        const lat2 = jobsAndLocData[1][1].results[0].geometry.location.lat;
 
         // Obtains Longitude for Locations 1 & 2
-        const lng1 = locArr[0].results[0].geometry.location.lng;
-        const lng2 = locArr[1].results[0].geometry.location.lng;
+        const lng1 = jobsAndLocData[0][1].results[0].geometry.location.lng;
+        const lng2 = jobsAndLocData[1][1].results[0].geometry.location.lng;
 
         console.log('Lat1/Lng1', lat1, lng1);
         console.log('Lat2/Lng2', lat2, lng2);
@@ -110,7 +109,9 @@ $(function () {
 
 
     // Centers the map equidistance from the two locations selected by the user
-    function centerMap(latLngCen) {
+    function centerMap(jobsAndLocData) {
+
+        getCentOfTwoLocs (jobsAndLocData);
 
         const geoCenLat = latLngCen.latCen;
         const geoCenLng = latLngCen.lngCen;
@@ -133,29 +134,26 @@ $(function () {
 
     function jobLocObjJoiner (jobData, locData) {
 
-        let jobCount = Promise.resolve(jobData);
-        let location = locData;
+        let jobLocDataSet = Promise.all([jobData, locData])
+        // let jobsAndLocData = jobLocDataSet
+        .then(jobLocDataSet => {displayResults(jobLocDataSet)
+            return jobLocDataSet
+        });
 
-        console.log('This is the Job Count acquired by the Job Count and Location Joiner function:', jobCount);
-        console.log('This is the location acquired by the Job Count and Location Joiner function:', location);
-
-        let countAndLocArr = [jobCount, location];
-
-        console.log('This is the countAndLocArr being returned by the Job Count and Location Joiner function:', countAndLocArr);
-
-        displayResults(countAndLocArr);
-
-        return countAndLocArr;
+        return jobLocDataSet;
     }
 
 
 
 
-    function addCirclesToMap(countAndLocArr) {
+    function addCirclesToMap(jobsAndLocData) {
+        console.log('This is the data being passed to add the circles:', jobsAndLocData);
+
+        centerMap(jobsAndLocData);
 
         // Construct the circle for each loc in locationsArr.
         // Note: We scale the area of the circle based on the Job Count.
-        return countAndLocArr.map((location) => {
+        return jobsAndLocData.map((location) => {
           // Add the circle for this location to the map.
           return new google.maps.Circle({
             strokeColor: '#FF0000',
@@ -165,7 +163,7 @@ $(function () {
             fillOpacity: 0.35,
             map,
             center: location.center,
-            radius: Math.sqrt(job.count) * 100,
+            radius: Math.sqrt(jobsAndLocData.count) * 100,
           });
         });
       }
@@ -203,28 +201,20 @@ $(function () {
 
 
             // DOES THE MAIN SUBMIT HANDLER THINGS
-
-            jobLocObjJoiner(getAdzunaJobSearch(userInputCountry, userInputCity, jobCategory), getsGMAPSObj(userInputCountry, userInputCity))
-            // .then((countAndLocArr) => { addCirclesToMap(countAndLocArr); });
-
-            jobLocObjJoiner(getAdzunaJobSearch(userInputCountry2, userInputCity2, jobCategory), getsGMAPSObj(userInputCountry2, userInputCity2))
-            // .then((countAndLocArr) => { addCirclesToMap(countAndLocArr); });
+            let jobLocDataset1 = jobLocObjJoiner(getAdzunaJobSearch(userInputCountry, userInputCity, jobCategory), getsGMAPSObj(userInputCountry, userInputCity));
 
 
+            let jobLocDataset2 = jobLocObjJoiner(getAdzunaJobSearch(userInputCountry2, userInputCity2, jobCategory), getsGMAPSObj(userInputCountry2, userInputCity2));
 
+            let finalPromise = [jobLocDataset1, jobLocDataset2];
 
+            Promise.all(finalPromise)
+            .then (data => {console.log('This is the Datas Final Form', data)
+            
+                return data
+            })
+            .then (data => addCirclesToMap (data))
 
-
-            // getCentOfTwoLocs(getsGMAPSObj(userInputCountry, userInputCity), getsGMAPSObj(userInputCountry2, userInputCity2))
-            // .then(centerMap);
-
-
-
-
-
-
-
-            // Pass center coords (GMLL) + job data to final map to produce circles  .then(stuff)
         });
     }
     submitHandler();
