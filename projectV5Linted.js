@@ -37,7 +37,7 @@ $(function () {
     function resultsHTML(countAndLocArr) {
 
         console.log('This is the data being passed before displaying the results. Should be an Array', countAndLocArr);
-        console.log('Now I have to try to work with it somehow. Here are the attempts:', Promise.resolve(countAndLocArr[0]));
+        console.log('Now I have to try to work with it somehow. Here are the attempts:', Promise.resolve(countAndLocArr[0].PromiseValue));
 
         return `
                 <label>Location
