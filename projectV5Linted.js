@@ -7,7 +7,7 @@
 // eslint-disable-next-line func-names
 // eslint-disable-next-line no-undef
 $(function () {
-    console.log('Get funky');
+    console.log('Get funky'); // Document Ready
 
     const ADZUNA_BASE_URL = 'https://api.adzuna.com/v1/api/';
     const ADZUNA_KEY = 'b22271cad1b74c76f8c6ec3587c34e86';
@@ -33,7 +33,7 @@ $(function () {
     }
 
 
-    // Converts Total Job Count and Salary Mean response into HTML
+    // Converts Job and Location response into HTML
     function resultsHTML(jobsAndLocData) {
 
         console.log('This is the data being passed before displaying the results in HTML. Should be an Array:', jobsAndLocData);
@@ -50,7 +50,7 @@ $(function () {
                 </label>`;
     }
 
-    // Displays Job Count & Mean Salary results in HTLM
+    // Displays results in HTLM
     function displayResults(data) {
         console.log('Results that will be displayed in HTML looks like this first:', data);
             $('#results').append(resultsHTML(data));
@@ -126,7 +126,7 @@ $(function () {
 
     
         map.setCenter(GMLL);
-
+        // Need to make the map keep the two locations in bound somehow -------!!!!!!!!!!
 
     }
 
@@ -145,10 +145,12 @@ $(function () {
 
 
 
+// Adds 2 Circles to the map, representing the Total Job Count in each city ----- THIS DOESN'T WORK!!!!!!!!!
 
     function addCirclesToMap(jobsAndLocData) {
         console.log('This is the data being passed to add the circles:', jobsAndLocData);
 
+        // Centers the map
         centerMap(jobsAndLocData);
 
         // Construct the circle for each loc in locationsArr.
