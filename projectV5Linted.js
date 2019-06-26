@@ -79,8 +79,8 @@ $(function () {
 
 
 
-    // Calculates the Center of the two locations selected by the user
-    function getCentOfTwoLocs(jobsAndLocData) {
+    // Centers the map based on the users two selected locations
+    function centerMap(jobsAndLocData) {
         // Obtains Latitude for Locations 1 & 2
         const lat1 = jobsAndLocData[0][1].results[0].geometry.location.lat;
         const lat2 = jobsAndLocData[1][1].results[0].geometry.location.lat;
@@ -89,7 +89,15 @@ $(function () {
         const lng1 = jobsAndLocData[0][1].results[0].geometry.location.lng;
         const lng2 = jobsAndLocData[1][1].results[0].geometry.location.lng;
 
+        
+        // Location 1 Lat/Lng
+        const loc1LatLng = {lat1, lng1};
+        console.log('Location 1 Lat/Lng:', loc1LatLng);
         console.log('Lat1/Lng1', lat1, lng1);
+        
+        // Location 2 Lat/Lng
+        const loc2LatLng = {lat2, lng2};
+        console.log('Location 2 Lat/Lng:', loc2LatLng);
         console.log('Lat2/Lng2', lat2, lng2);
 
         // Calculates Center of Latitude and Longitude coordinates respectively
@@ -104,14 +112,6 @@ $(function () {
 
         console.log('The Latitude and Longitude CENTER Oject Location is representated as such:', latLngCen);
 
-        return latLngCen;
-    }
-
-
-    // Centers the map equidistance from the two locations selected by the user
-    function centerMap(jobsAndLocData) {
-
-        getCentOfTwoLocs (jobsAndLocData);
 
         const geoCenLat = latLngCen.latCen;
         const geoCenLng = latLngCen.lngCen;
@@ -124,13 +124,13 @@ $(function () {
 
         console.log('This is the Map Lat/Long... Object?', GMLL);
 
-        return map.setCenter(GMLL);
+    
+        map.setCenter(GMLL);
+
+
     }
 
-// This should almost work somehow though I need to pass in the
-// Job data and GMLL (Lat/Lng Obj Lit for the center) Must package both forms of data
-// to pass to this circle making function
-
+    // Joins JSON data sets for Job and Location
 
     function jobLocObjJoiner (jobData, locData) {
 
