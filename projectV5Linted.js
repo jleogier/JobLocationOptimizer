@@ -39,15 +39,18 @@ $(function () {
         console.log('This is the data being passed before displaying the results in HTML. Should be an Array:', jobsAndLocData);
 
         return `
-                <label>Location
+        <section class="result" role="show-result">
+                <label class="result label" aria-label="Location">Location
                     <span>${jobsAndLocData[1].results[0].formatted_address}</span>
                 </label>
-                <label>Job Count
+                <label class="result label" aria-label="Job-Count">Job Count
                     <span>${jobsAndLocData[0].count}</span>
                 </label>
-                <label>Salary Mean
+                <label class="result label" aria-label="Salary-Mean">Salary Mean
                     <span>${jobsAndLocData[0].mean}</span>
-                </label>`;
+                </label>
+        </section >
+                `;
     }
 
     // Displays results in HTLM
@@ -91,12 +94,12 @@ $(function () {
 
         
         // Location 1 Lat/Lng
-        const loc1LatLng = {lat1, lng1};
+        const loc1LatLng = {lat: lat1, lng: lng1};
         console.log('Location 1 Lat/Lng:', loc1LatLng);
         console.log('Lat1/Lng1', lat1, lng1);
         
         // Location 2 Lat/Lng
-        const loc2LatLng = {lat2, lng2};
+        const loc2LatLng = {lat: lat2, lng: lng2};
         console.log('Location 2 Lat/Lng:', loc2LatLng);
         console.log('Lat2/Lng2', lat2, lng2);
 
@@ -122,17 +125,26 @@ $(function () {
         const GMLL = new google.maps.LatLng(geoCenLat, geoCenLng);
         // GMLL = Google Maps Latitude and Longitude
 
-        console.log('This is the Map Lat/Long... Object?', GMLL);
-
-    
         map.setCenter(GMLL);
+        
+        console.log('This is the Map Lat/Long... Object?', GMLL);
+        
         // Need to make the map keep the two locations in bound somehow -------!!!!!!!!!!
 
+        // determine lat/lng bounds NE/SW before creating bounds
+        
+        const latLngBounds = new google.maps.LatLngBounds(loc2LatLng, loc1LatLng);
+
+
+
+        const padding = {right: 75, left: 75, top: 75, bottom: 75};
+
+        map.fitBounds(latLngBounds, padding);
     }
 
     // Joins JSON data sets for Job and Location
 
-    function jobLocObjJoiner (jobData, locData) {
+    function jobLocObjJoiner (jobData, locData) { 
 
         let jobLocDataSet = Promise.all([jobData, locData])
         // let jobsAndLocData = jobLocDataSet
@@ -153,6 +165,8 @@ $(function () {
         // Centers the map
         centerMap(jobsAndLocData);
 
+        console.log('This is suppose to be the job count being passed to make the circles', jobsAndLocData[0][0].count);
+
         // Construct the circle for each loc in locationsArr.
         // Note: We scale the area of the circle based on the Job Count.
         return jobsAndLocData.map((location) => {
@@ -165,7 +179,7 @@ $(function () {
             fillOpacity: 0.35,
             map,
             center: location.center,
-            radius: Math.sqrt(jobsAndLocData.count) * 100,
+            radius: Math.sqrt(jobsAndLocData[0][0].count) * 100,
           });
         });
       }
@@ -212,7 +226,7 @@ $(function () {
 
             Promise.all(finalPromise)
             .then (data => {console.log('This is the Datas Final Form', data)
-            
+
                 return data
             })
             .then (data => addCirclesToMap (data))
@@ -229,6 +243,7 @@ function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 37.77439, lng: -122.419416 },
         zoom: 9,
+        mapTypeId: 'roadmap',
         });
 
         infoWindow = new google.maps.InfoWindow();

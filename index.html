@@ -33,93 +33,93 @@
 
 <body>      
     <form>
-        <legend>Job and Location Optimizer</legend>        
+        <legend aria-label="Job-Location-Optimizer">Job and Location Optimizer</legend>        
 
-        <h3>Select Location</h3>
-        <select id="userInputCountry" class="userInputs">
-            <option value="us" selected>United States</option>
-            <option value="gb">Great Britain</option>
-            <option value="au">Australia</option>
-            <option value="at">Austria</option>
-            <option value="br">Brazil</option>
-            <option value="ca">Canada</option>
-            <option value="de">Germany</option>
-            <option value="fr">France</option>
-            <option value="in">India</option>
-            <option value="it">Italy</option>
-            <option value="nl">Netherlands</option>
-            <option value="nz">New Zealand</option>
-            <option value="pl">Poland</option>
-            <option value="ru">Russia</option>
-            <option value="sg">Singapore</option>
-            <option value="za">South Africa</option>
+        <label>Select Location</label>
+        <select role="optionSelector" id="userInputCountry" class="userInputs">
+            <option role="option" value="us" selected>United States</option>
+            <option role="option" value="gb">Great Britain</option>
+            <option role="option" value="au">Australia</option>
+            <option role="option" value="at">Austria</option>
+            <option role="option" value="br">Brazil</option>
+            <option role="option" value="ca">Canada</option>
+            <option role="option" value="de">Germany</option>
+            <option role="option" value="fr">France</option>
+            <option role="option" value="in">India</option>
+            <option role="option" value="it">Italy</option>
+            <option role="option" value="nl">Netherlands</option>
+            <option role="option" value="nz">New Zealand</option>
+            <option role="option" value="pl">Poland</option>
+            <option role="option" value="ru">Russia</option>
+            <option role="option" value="sg">Singapore</option>
+            <option role="option" value="za">South Africa</option>
         </select>
 
-        <input id="userInputCity" class="userInputs" type="text" placeholder="City: e,g Los Angeles" autofocus required value="Los Angeles">
+        <input for="city" id="userInputCity" class="userInputs" type="text" placeholder="City: e,g Los Angeles" autofocus required value="Los Angeles">
 
-        <h3>Select 2nd Location</h3>
-        <select id="userInputCountry2" class="userInputs">
-            <option value="us" selected>United States</option>
-            <option value="gb">Great Britain</option>
-            <option value="au">Australia</option>
-            <option value="at">Austria</option>
-            <option value="br">Brazil</option>
-            <option value="ca">Canada</option>
-            <option value="de">Germany</option>
-            <option value="fr">France</option>
-            <option value="in">India</option>
-            <option value="it">Italy</option>
-            <option value="nl">Netherlands</option>
-            <option value="nz">New Zealand</option>
-            <option value="pl">Poland</option>
-            <option value="ru">Russia</option>
-            <option value="sg">Singapore</option>
-            <option value="za">South Africa</option>
+        <label>Select 2nd Location</label>
+        <select role="optionSelector" id="userInputCountry2" class="userInputs">
+            <option role="option" value="us" selected>United States</option>
+            <option role="option" value="gb">Great Britain</option>
+            <option role="option" value="au">Australia</option>
+            <option role="option" value="at">Austria</option>
+            <option role="option" value="br">Brazil</option>
+            <option role="option" value="ca">Canada</option>
+            <option role="option" value="de">Germany</option>
+            <option role="option" value="fr">France</option>
+            <option role="option" value="in">India</option>
+            <option role="option" value="it">Italy</option>
+            <option role="option" value="nl">Netherlands</option>
+            <option role="option" value="nz">New Zealand</option>
+            <option role="option" value="pl">Poland</option>
+            <option role="option" value="ru">Russia</option>
+            <option role="option" value="sg">Singapore</option>
+            <option role="option" value="za">South Africa</option>
         </select>
 
-        <input id="userInputCity2" class="userInputs" type="text" placeholder="City: e,g Seattle" required value="Seattle">
+        <input for="city" id="userInputCity2" class="userInputs" type="text" placeholder="City: e,g Seattle" required value="Seattle">
 
-        <h3>Select Job Category</h3>
-        <select id="userInputJobCategory" class="userInputs">
-            <option value="it-jobs" selected>IT Jobs</option>
-            <option value="consultancy-jobs">Consultancy Jobs</option>
-            <option value="charity-voluntary-jobs">Charity & Voluntary Jobs</option>
-            <option value="property-jobs">Property Jobs</option>
-            <option value="legal-jobs">Legal Jobs</option>
-            <option value="customer-services-jobs">Customer Services Jobs</option>
-            <option value="teaching-jobs">Teaching Jobs</option>
-            <option value="other-general-jobs">Other/General Jobs</option>
-            <option value="accounting-finance-jobs">Accounting & Finance Jobs</option>
-            <option value="retail-jobs">Retail Jobs</option>
-            <option value="manufacturing-jobs">Manufacturing Jobs</option>
-            <option value="hospitality-catering-jobs">Hospitality & Catering Jobs</option>
-            <option value="healthcare-nursing-jobs">Healthcare & Nursing Jobs</option>
-            <option value="trade-construction-jobs">Trade & Construction Jobs</option>
-            <option value="domestic-help-cleaning-jobs">Help & Cleaning Jobs</option>
-            <option value="creative-design-jobs">Creative & Design Jobs</option>
-            <option value="logistics-warehouse-jobs">Logistics & Warehouse Jobs</option>
-            <option value="hr-jobs">HR & Recruitment Jobs</option>
-            <option value="pr-advertising-marketing-jobs">PR, Advertising & Marketing Jobs</option>
-            <option value="social-work-jobs">Social work Jobs</option>
-            <option value="travel-jobs">Travel Jobs</option>
-            <option value="energy-oil-gas-jobs">Energy, Oil & Gas Jobs</option>
-            <option value="maintenance-jobs">Maintenance Jobs</option>
-            <option value="scientific-qa-jobs">Scientific & QA Jobs</option>
-            <option value="graduate-jobs">Graduate Jobs</option>
-            <option value="engineering-jobs">Engineering Jobs</option>
-            <option value="part-time-jobs">Part time Jobs</option>
-            <option value="sales-jobs">Sales Jobs</option>
-            <option value="admin-jobs">Admin Jobs</option>
+        <label>Select Job Category</label>
+        <select role="optionSelector" id="userInputJobCategory" class="userInputs">
+            <option role="option" value="it-jobs" selected>IT Jobs</option>
+            <option role="option" value="consultancy-jobs">Consultancy Jobs</option>
+            <option role="option" value="charity-voluntary-jobs">Charity & Voluntary Jobs</option>
+            <option role="option" value="property-jobs">Property Jobs</option>
+            <option role="option" value="legal-jobs">Legal Jobs</option>
+            <option role="option" value="customer-services-jobs">Customer Services Jobs</option>
+            <option role="option" value="teaching-jobs">Teaching Jobs</option>
+            <option role="option" value="other-general-jobs">Other/General Jobs</option>
+            <option role="option" value="accounting-finance-jobs">Accounting & Finance Jobs</option>
+            <option role="option" value="retail-jobs">Retail Jobs</option>
+            <option role="option" value="manufacturing-jobs">Manufacturing Jobs</option>
+            <option role="option" value="hospitality-catering-jobs">Hospitality & Catering Jobs</option>
+            <option role="option" value="healthcare-nursing-jobs">Healthcare & Nursing Jobs</option>
+            <option role="option" value="trade-construction-jobs">Trade & Construction Jobs</option>
+            <option role="option" value="domestic-help-cleaning-jobs">Help & Cleaning Jobs</option>
+            <option role="option" value="creative-design-jobs">Creative & Design Jobs</option>
+            <option role="option" value="logistics-warehouse-jobs">Logistics & Warehouse Jobs</option>
+            <option role="option" value="hr-jobs">HR & Recruitment Jobs</option>
+            <option role="option" value="pr-advertising-marketing-jobs">PR, Advertising & Marketing Jobs</option>
+            <option role="option" value="social-work-jobs">Social work Jobs</option>
+            <option role="option" value="travel-jobs">Travel Jobs</option>
+            <option role="option" value="energy-oil-gas-jobs">Energy, Oil & Gas Jobs</option>
+            <option role="option" value="maintenance-jobs">Maintenance Jobs</option>
+            <option role="option" value="scientific-qa-jobs">Scientific & QA Jobs</option>
+            <option role="option" value="graduate-jobs">Graduate Jobs</option>
+            <option role="option" value="engineering-jobs">Engineering Jobs</option>
+            <option role="option" value="part-time-jobs">Part time Jobs</option>
+            <option role="option" value="sales-jobs">Sales Jobs</option>
+            <option role="option" value="admin-jobs">Admin Jobs</option>
         </select>
         
         <input id="submitButton" type="submit">
     </form>
 
     <!-- <h3>Please Note that the Salary Displayed is in the Local Currency</h3> -->
-    <div id="results"></div>
-    <h4>Here is a heat map showing the selected job category's density</h4>
+    <div id="results" ></div>
+    <h4>Here is a map showing the selected job category's total availability</h4>
 
-<div id="map"></div>
+<div role="map" id="map"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>   
     <script src="projectV5Linted.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI&callback=initMap&libraries=geometry,visualization" async defer></script>
