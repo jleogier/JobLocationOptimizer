@@ -36,18 +36,36 @@ $(function () {
     // Converts Job and Location response into HTML
     function resultsHTML(jobsAndLocData) {
 
+
+        const location = jobsAndLocData[1].results[0].formatted_address;
+
+        const jobData = jobsAndLocData[0];
+
+        const jobCount = jobData.count;
+
+        const mean = jobData.mean;
+            if (mean === undefined) {
+                return `
+                <section class="result" role="show-result">
+                <label class="result" id="noData" aria-errormessage="not enough job data for location">Not enough Job Data for ${location} because the Aduzna API sucks. No map marker will be shown</label>                
+                </section>`;
+
+            } else {
+                mean;
+            }
+
         console.log('This is the data being passed before displaying the results in HTML. Should be an Array:', jobsAndLocData);
 
         return `
         <section class="result" role="show-result">
                 <label class="result label" aria-label="Location">Location
-                    <span>${jobsAndLocData[1].results[0].formatted_address}</span>
+                    <span class="displayedData" aria-label="result location">${location}</span>
                 </label>
                 <label class="result label" aria-label="Job-Count">Job Count
-                    <span>${jobsAndLocData[0].count}</span>
+                    <span class="displayedData" aria-label="result job count">${jobCount}</span>
                 </label>
                 <label class="result label" aria-label="Salary-Mean">Salary Mean
-                    <span>${jobsAndLocData[0].mean}</span>
+                    <span class="displayedData" aria-label="result job mean">${mean}</span>
                 </label>
         </section >
                 `;
@@ -84,22 +102,26 @@ $(function () {
 
     // Centers the map based on the users two selected locations
     function centerMap(jobsAndLocData) {
+
+        const location1 = jobsAndLocData[0][1].results[0].geometry.location;
+        const location2 = jobsAndLocData[1][1].results[0].geometry.location;
+        
         // Obtains Latitude for Locations 1 & 2
-        const lat1 = jobsAndLocData[0][1].results[0].geometry.location.lat;
-        const lat2 = jobsAndLocData[1][1].results[0].geometry.location.lat;
+        const lat1 = location1.lat;
+        const lat2 = location2.lat;
 
         // Obtains Longitude for Locations 1 & 2
-        const lng1 = jobsAndLocData[0][1].results[0].geometry.location.lng;
-        const lng2 = jobsAndLocData[1][1].results[0].geometry.location.lng;
+        const lng1 = location1.lng;
+        const lng2 = location2.lng;
 
         
         // Location 1 Lat/Lng
-        const loc1LatLng = {lat: lat1, lng: lng1};
+        const loc1LatLng = { lat: lat1, lng: lng1 };
         console.log('Location 1 Lat/Lng:', loc1LatLng);
         console.log('Lat1/Lng1', lat1, lng1);
         
         // Location 2 Lat/Lng
-        const loc2LatLng = {lat: lat2, lng: lng2};
+        const loc2LatLng = { lat: lat2, lng: lng2 };
         console.log('Location 2 Lat/Lng:', loc2LatLng);
         console.log('Lat2/Lng2', lat2, lng2);
 
@@ -115,7 +137,6 @@ $(function () {
 
         console.log('The Latitude and Longitude CENTER Oject Location is representated as such:', latLngCen);
 
-
         const geoCenLat = latLngCen.latCen;
         const geoCenLng = latLngCen.lngCen;
 
@@ -126,18 +147,21 @@ $(function () {
         // GMLL = Google Maps Latitude and Longitude
 
         map.setCenter(GMLL);
-        
+
         console.log('This is the Map Lat/Long... Object?', GMLL);
-        
+
         // Need to make the map keep the two locations in bound somehow -------!!!!!!!!!!
 
         // determine lat/lng bounds NE/SW before creating bounds
-        
+
         const latLngBounds = new google.maps.LatLngBounds(loc2LatLng, loc1LatLng);
 
-
-
-        const padding = {right: 75, left: 75, top: 75, bottom: 75};
+        const padding = {
+            right: 75,
+            left: 75,
+            top: 75,
+            bottom: 75,
+        };
 
         map.fitBounds(latLngBounds, padding);
     }
@@ -156,8 +180,15 @@ $(function () {
     }
 
 
+    // NE/SW fixer
 
-// Adds 2 Circles to the map, representing the Total Job Count in each city ----- THIS DOESN'T WORK!!!!!!!!!
+    // function viewportSetter (loc1, loc2) {
+
+
+    //     const loc1 = loc[0].results[0].geometry.location;
+    //     const loc2 = loc[1].results[0].geometry.location;
+
+    // }
 
     function addCirclesToMap(jobsAndLocData) {
         console.log('This is the data being passed to add the circles:', jobsAndLocData);
@@ -165,22 +196,32 @@ $(function () {
         // Centers the map
         centerMap(jobsAndLocData);
 
-        console.log('This is suppose to be the job count being passed to make the circles', jobsAndLocData[0][0].count);
-
         // Construct the circle for each loc in locationsArr.
         // Note: We scale the area of the circle based on the Job Count.
         return jobsAndLocData.map((location) => {
           // Add the circle for this location to the map.
-          return new google.maps.Circle({
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.35,
-            map,
-            center: location.center,
-            radius: Math.sqrt(jobsAndLocData[0][0].count) * 100,
-          });
+
+            const jobCount = location[0].count;
+            console.log('This is the obtained job Count:', jobCount);
+
+            const loc = location[1].results[0].geometry.location;
+            console.log('This is the obtained lat/lng of the location:', loc);
+
+
+            if (jobCount <= 100) {
+                return 
+            } else {
+                return new google.maps.Circle({
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.35,
+                    map,
+                    center: loc,
+                    radius: jobCount * 100,
+                  });
+            }
         });
       }
 

@@ -33,9 +33,9 @@
 
 <body>      
     <form>
-        <legend aria-label="Job-Location-Optimizer">Job and Location Optimizer</legend>        
+        <legend role="heading" aria-label="Job Location Optimizer">Job and Location Optimizer</legend>        
 
-        <label>Select Location</label>
+        <label aria-label="Select Location 1">Select Location</label>
         <select role="optionSelector" id="userInputCountry" class="userInputs">
             <option role="option" value="us" selected>United States</option>
             <option role="option" value="gb">Great Britain</option>
@@ -55,9 +55,9 @@
             <option role="option" value="za">South Africa</option>
         </select>
 
-        <input for="city" id="userInputCity" class="userInputs" type="text" placeholder="City: e,g Los Angeles" autofocus required value="Los Angeles">
+        <input role="textbox" for="city" id="userInputCity" class="userInputs" type="text" placeholder="City: e,g Los Angeles" autofocus required value="Los Angeles">
 
-        <label>Select 2nd Location</label>
+        <label aria-label="Select Location 2">Select 2nd Location</label>
         <select role="optionSelector" id="userInputCountry2" class="userInputs">
             <option role="option" value="us" selected>United States</option>
             <option role="option" value="gb">Great Britain</option>
@@ -77,9 +77,9 @@
             <option role="option" value="za">South Africa</option>
         </select>
 
-        <input for="city" id="userInputCity2" class="userInputs" type="text" placeholder="City: e,g Seattle" required value="Seattle">
+        <input role="textbox" for="city" id="userInputCity2" class="userInputs" type="text" placeholder="City: e,g Seattle" required value="Seattle">
 
-        <label>Select Job Category</label>
+        <label aria-label="Job Category Selector">Select Job Category</label>
         <select role="optionSelector" id="userInputJobCategory" class="userInputs">
             <option role="option" value="it-jobs" selected>IT Jobs</option>
             <option role="option" value="consultancy-jobs">Consultancy Jobs</option>
@@ -111,15 +111,15 @@
             <option role="option" value="sales-jobs">Sales Jobs</option>
             <option role="option" value="admin-jobs">Admin Jobs</option>
         </select>
-        
-        <input id="submitButton" type="submit">
+
+        <input id="submitButton" type="submit" role="button">
     </form>
 
-    <!-- <h3>Please Note that the Salary Displayed is in the Local Currency</h3> -->
-    <div id="results" ></div>
-    <h4>Here is a map showing the selected job category's total availability</h4>
+    <h3 role="heading" aria-label="salary in local currency">Please Note that the Salary Displayed is in the Local Currency</h3>
+    <div aria-label="results displayed" id="results"></div>
+    <h4 id="mapHeading" role="heading">Here is a map showing the selected job category's total availability</h4>
 
-<div role="map" id="map"></div>
+<div aria-label="map displaying total job count" role="map" id="map"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>   
     <script src="projectV5Linted.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI&callback=initMap&libraries=geometry,visualization" async defer></script>
