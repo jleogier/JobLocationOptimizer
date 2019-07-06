@@ -119,12 +119,12 @@ $(function () {
         const lng1 = location1.lng;
         const lng2 = location2.lng;
 
-        
+
         // Location 1 Lat/Lng
         const loc1LatLng = { lat: lat1, lng: lng1 };
         console.log('Location 1 Lat/Lng:', loc1LatLng);
         console.log('Lat1/Lng1', lat1, lng1);
-        
+
         // Location 2 Lat/Lng
         const loc2LatLng = { lat: lat2, lng: lng2 };
         console.log('Location 2 Lat/Lng:', loc2LatLng);
@@ -203,6 +203,17 @@ $(function () {
         }
     }
 
+
+    function toObject(arr) {
+        var latLngObj = {};
+        for (var i = 0; i < arr.length; ++i)
+            latLngObj[i] = arr[i];
+            console.log('This is the converted Arr into Obj', latLngObj);
+        
+
+        return latLngObj;
+    }
+
     // NE/SW fixer
 
     function viewportSetter (data) {
@@ -246,7 +257,7 @@ $(function () {
                     return newNELat
                 });
 
-                console.log('This is the returned promise value for New NE Lat Bound',neLatBound)
+                console.log('This is the returned promise value for New NE Lat Bound',neLatBound);
 
     neLngBound = 
                 biggerThanCalculator(loc1NELng, loc2NELng)
@@ -255,7 +266,7 @@ $(function () {
                     return newNELng
                 });
 
-    console.log('This is the returned promise value for New NE Lng Bound',neLngBound)
+                console.log('This is the returned promise value for New NE Lng Bound',neLngBound);
     
     swLatBound = 
                 smallerThanCalculator(loc1SWLat, loc2SWLat)
@@ -263,7 +274,8 @@ $(function () {
                     let newSWLat = smallestSWLat
                     return newSWLat
                 })
-    
+                
+                console.log('This is the returned promise value for New SW Lat Bound',swLatBound);
 
     swLngBound = 
                 smallerThanCalculator(loc1SWLng, loc2SWLng)
@@ -272,6 +284,8 @@ $(function () {
                     return newSWLng
                 })
 
+                console.log('This is the returned promise value for New SW Lng Bound',swLngBound);
+
     // let newNEBound = Promise.all(newNEBound.concat(newNELat,newNELng))
     // let newSWBound = Promise.all(newSWBound.concat(newSWLat, newSWLng))
 
@@ -279,14 +293,29 @@ $(function () {
     // console.log('This is the new NE Lng bound', neLngBound);
 
     newNEBound = Promise.all([neLatBound, neLngBound])
-    // .then (data => data)
+    .then (data => {
+        console.log('This is the NE data being passed that needs to be converted into an obj for the gmaps Lat/Lng Bounds Obj:', data);
+        const latLng = toObject(data);
+
+        console.log('This should be the NE Obj that is getting passed to gmaps lat lng', latLng);
+
+        return latLng
+    })
     console.log('This is the New NE Bound:', newNEBound);
 
-    newSWBound = Promise.all([swLatBound, swLngBound])
-    // .then (data => data)
-    console.log('This is the New SW Bound:', newSWBound)
 
-    const latLngBounds = new google.maps.LatLngBounds(newSWBound.PromiseValue, newNEBound.PromiseValue);
+    newSWBound = Promise.all([swLatBound, swLngBound])
+    .then (data => {
+        console.log('This is the SW data being passed that needs to be converted into an obj for the gmaps Lat/Lng Bounds Obj:', data);
+        const latLng = toObject(data);
+
+        console.log('This should be the SW Obj that is getting passed to gmaps lat lng', latLng);
+
+        return latLng
+    })
+    console.log('This is the New SW Bound:', newSWBound);
+
+    const latLngBounds = new google.maps.LatLngBounds(newSWBound, newNEBound);
 
     console.log('This is the Lat/Lng Bounds Object:', latLngBounds);
 
