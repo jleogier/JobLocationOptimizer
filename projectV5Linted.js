@@ -6,6 +6,10 @@
 // eslint-disable-next-line no-undef
 // eslint-disable-next-line func-names
 // eslint-disable-next-line no-undef
+
+
+let circles = [];
+
 $(function () {
     console.log('Get funky'); // Document Ready
 
@@ -67,7 +71,7 @@ $(function () {
                 <label class="result label" aria-label="Salary-Mean">Salary Mean
                     <span class="displayedData" aria-label="result job mean">${mean}</span>
                 </label>
-        </section >
+        </section>
                 `;
     }
 
@@ -99,9 +103,10 @@ $(function () {
 
 
 
-
     // Centers the map based on the users two selected locations
     function centerMap(jobsAndLocData) {
+
+        viewportSetter (jobsAndLocData);
 
         const location1 = jobsAndLocData[0][1].results[0].geometry.location;
         const location2 = jobsAndLocData[1][1].results[0].geometry.location;
@@ -154,16 +159,18 @@ $(function () {
 
         // determine lat/lng bounds NE/SW before creating bounds
 
-        const latLngBounds = new google.maps.LatLngBounds(loc2LatLng, loc1LatLng);
 
-        const padding = {
-            right: 75,
-            left: 75,
-            top: 75,
-            bottom: 75,
-        };
 
-        map.fitBounds(latLngBounds, padding);
+    //     const latLngBounds = new google.maps.LatLngBounds(loc2LatLng, loc1LatLng);
+
+    //     const padding = {
+    //         right: 75,
+    //         left: 75,
+    //         top: 75,
+    //         bottom: 75,
+    //     };
+
+    //     map.fitBounds(latLngBounds, padding);
     }
 
     // Joins JSON data sets for Job and Location
@@ -180,21 +187,171 @@ $(function () {
     }
 
 
+    async function biggerThanCalculator (num1, num2) {
+        if (num1 > num2) {
+            return num1
+        } else {
+            return num2
+        }
+    };
+
+    async function smallerThanCalculator (num1, num2) {
+        if (num1 < num2) {
+            return num1
+        } else {
+            return num2
+        }
+    }
+
     // NE/SW fixer
 
-    // function viewportSetter (loc1, loc2) {
+    function viewportSetter (data) {
+
+    console.log('This is the viewport Data set', data);
+
+    let newNEBound = [];
+    let newSWBound = [];
+
+    const loc1NELat = data[0][1].results[0].geometry.bounds.northeast.lat;
+    const loc1NELng = data[0][1].results[0].geometry.bounds.northeast.lng;
+
+    console.log('This is the obtained Location 1 NorthEast Lat Bound:', loc1NELat);
+    console.log('This is the obtained Location 1 NorthEast Lng Bound:', loc1NELng);
 
 
-    //     const loc1 = loc[0].results[0].geometry.location;
-    //     const loc2 = loc[1].results[0].geometry.location;
+    const loc1SWLat = data[0][1].results[0].geometry.bounds.southwest.lat;
+    const loc1SWLng = data[0][1].results[0].geometry.bounds.southwest.lng;
 
+    console.log('This is the obtained Location 1 SouthWest Lat Bound', loc1SWLat);
+    console.log('This is the obtained Location 1 SouthWest Lng Bound', loc1SWLng);
+
+
+    const loc2NELat = data[1][1].results[0].geometry.bounds.northeast.lat;
+    const loc2NELng = data[1][1].results[0].geometry.bounds.northeast.lng;
+
+    console.log('This is the obtained Location 2 NorthEast Lat Bound', loc2NELat);
+    console.log('This is the obtained Location 2 NorthEast Lng Bound', loc2NELng);
+
+    const loc2SWLat = data[1][1].results[0].geometry.bounds.southwest.lat;
+    const loc2SWLng = data[1][1].results[0].geometry.bounds.southwest.lng;
+
+    console.log('This is the obtained Location 2 SouthWest Lat Bound', loc2SWLat);
+    console.log('This is the obtained Location 2 SouthWest Lng Bound', loc2SWLng);
+
+
+    neLatBound = 
+                biggerThanCalculator(loc1NELat, loc2NELat)
+                .then (biggestNELat => {
+                    let newNELat = biggestNELat
+                    return newNELat
+                });
+
+                console.log('This is the returned promise value for New NE Lat Bound',neLatBound)
+
+    neLngBound = 
+                biggerThanCalculator(loc1NELng, loc2NELng)
+                .then (biggestNELng => {
+                    let newNELng = biggestNELng
+                    return newNELng
+                });
+
+    console.log('This is the returned promise value for New NE Lng Bound',neLngBound)
+    
+    swLatBound = 
+                smallerThanCalculator(loc1SWLat, loc2SWLat)
+                .then (smallestSWLat => {
+                    let newSWLat = smallestSWLat
+                    return newSWLat
+                })
+    
+
+    swLngBound = 
+                smallerThanCalculator(loc1SWLng, loc2SWLng)
+                .then (smallestSWLng => {
+                    let newSWLng = smallestSWLng
+                    return newSWLng
+                })
+
+    // let newNEBound = Promise.all(newNEBound.concat(newNELat,newNELng))
+    // let newSWBound = Promise.all(newSWBound.concat(newSWLat, newSWLng))
+
+    // console.log('This is the new NE Lat bound', neLatBound);
+    // console.log('This is the new NE Lng bound', neLngBound);
+
+    newNEBound = Promise.all([neLatBound, neLngBound])
+    // .then (data => data)
+    console.log('This is the New NE Bound:', newNEBound);
+
+    newSWBound = Promise.all([swLatBound, swLngBound])
+    // .then (data => data)
+    console.log('This is the New SW Bound:', newSWBound)
+
+    const latLngBounds = new google.maps.LatLngBounds(newSWBound.PromiseValue, newNEBound.PromiseValue);
+
+    console.log('This is the Lat/Lng Bounds Object:', latLngBounds);
+
+    console.log('This is suppose to be the NE corner of the Lat/Lng bound:', latLngBounds.getNorthEast())
+
+    const padding = {
+        right: 75,
+        left: 75,
+        top: 75,
+        bottom: 75,
+    };
+
+    return map.fitBounds(latLngBounds, padding);
+
+
+
+
+    // REFACTORED - SHOULD BE ABLE TO DELETE
+    // // Finds correct NE Lat bound
+    //  if (loc1NELat > loc2NELat) {
+    //     let newNELat = loc1NELat;
+    // } else {
+    //     let newNELat = loc2NELat;
     // }
+
+    // // Finds correct NE Lng bound
+    // if (loc1NELng > loc2NELng) {
+    //     let newNELng = loc1NELng
+    // } else {
+    //     let newNELng = loc2NELng
+    // }
+
+
+    // // Finds correct SW Lat bound
+    // if (loc1SWLat > loc2SWLat) {
+    //     let newSWLat = loc1SWLat
+    // } else {
+    //     let newSWLat = loc2SWLat
+    // }
+
+    // // Finds correct SW Lng bound
+    // if (loc1SWLng > loc2SWLng) {
+    //     let newSWLng = loc1SWLng
+    // } else {
+    //     let newSWLng = loc2SWLng
+    // }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
     function addCirclesToMap(jobsAndLocData) {
         console.log('This is the data being passed to add the circles:', jobsAndLocData);
 
-        // Centers the map
-        centerMap(jobsAndLocData);
+
 
         // Construct the circle for each loc in locationsArr.
         // Note: We scale the area of the circle based on the Job Count.
@@ -257,6 +414,8 @@ $(function () {
             $('#results').html('');
 
 
+
+
             // DOES THE MAIN SUBMIT HANDLER THINGS
             let jobLocDataset1 = jobLocObjJoiner(getAdzunaJobSearch(userInputCountry, userInputCity, jobCategory), getsGMAPSObj(userInputCountry, userInputCity));
 
@@ -270,12 +429,25 @@ $(function () {
 
                 return data
             })
-            .then (data => addCirclesToMap (data))
+            .then (data => {
+                // centerMap(data)
+                viewportSetter(data);
 
+            let newCircles = addCirclesToMap (data);
+            circles.concat(newCircles);
+            })
         });
     }
     submitHandler();
 });
+
+// function deleteAllCircles () {
+//     for (var i = 0; i < circles.length; i++) {
+//         circles[i].setMap(null);
+//       }
+
+//     circles =[];
+// }
 
 
 // Initializes Map
