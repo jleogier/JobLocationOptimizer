@@ -1,6 +1,7 @@
 $(function () {
     let circles = [];
-    let bounds;
+    let bounds = { north: NaN, east: NaN, south: NaN, west: NaN };
+
     console.log('Get funky'); // Document Ready
 
     const ADZUNA_BASE_URL = 'https://api.adzuna.com/v1/api/';
@@ -130,47 +131,36 @@ $(function () {
            
     }
 
-    function fixBounds(minimizedBoundsObject){
-        let cityBounds = {};
-        cityBounds.sw = minimizedBoundsObject.ga;
-        cityBounds.sw.lat = minimizedBoundsObject.ga.j;
-        cityBounds.sw.lng = minimizedBoundsObject.ga.l;
-        cityBounds.ne = minimizedBoundsObject.na;
-        cityBounds.ne.lat = minimizedBoundsObject.na.j;
-        cityBounds.ne.lng = minimizedBoundsObject.na.l;
-        delete cityBounds.ga;
-        delete cityBounds.na;
-        delete cityBounds.ne.l;
-        delete cityBounds.ne.j;
-        delete cityBounds.sw.l;
-        delete cityBounds.sw.j;
-        return new google.maps.LatLngBounds(cityBounds);
-    }
-
         // GOOD ABSTRACTION, inside which has frustrating bullshit we want to ignore for now
     function addCityToMapBounds(cityBounds){
-        return ; // not working yet
-        console.log('city bounds before conversion', cityBounds);
-        
-        cityBounds = new google.maps.LatLngBounds([
-            new google.maps.LatLng(cityBounds.southwest.lat, cityBounds.southwest.lng),
-            new google.maps.LatLng(cityBounds.northeast.lat, cityBounds.northeast.lng)
-        ]);
 
-        console.log('display results for city bounds:', cityBounds);
-
-        // add location to bounds
-        if( bounds ){
-            bounds.extend( cityBounds.southwest );
-            bounds.extend( cityBounds.northeast );
-        } else {
-            bounds = cityBounds;
+        if( isNaN(bounds.north) || cityBounds.northeast.lat > bounds.north ){
+            // set incoming cityBounds as global bounds true north
+            bounds.north = cityBounds.northeast.lat;
         }
+
+        if( isNaN(bounds.south) || cityBounds.southwest.lat < bounds.south ){
+            // set incoming cityBounds as global bounds true south
+            bounds.south = cityBounds.southwest.lat;
+        }
+
+        if( isNaN(bounds.east) || cityBounds.northeast.lng > bounds.east ){
+            // set incoming cityBounds as global bounds true east
+            bounds.east = cityBounds.northeast.lng;
+        }
+
+        if( isNaN(bounds.west) || cityBounds.southwest.lat < bounds.west ){
+            // set incoming cityBounds as global bounds true west
+            bounds.west = cityBounds.southwest.lng;
+        }
+
     }
 
     function zoomToMapBounds(){
         // center map on the global bounds
-        // map.fitBounds(bounds);   // not working cause bounds suck
+        console.log("Asking google to center map on bounds: ", JSON.stringify(bounds) )
+        // wait until this point to make an actual google lat lng bounds object
+        map.fitBounds(bounds);   // not working cause bounds suck
     }
 
 
@@ -468,7 +458,7 @@ $(function () {
 
 // Initializes Map
 function initMap() {
-    bounds = new google.maps.LatLngBounds();
+    // bounds = new google.maps.LatLngBounds();
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 37.77439, lng: -122.419416 },
         zoom: 9,
