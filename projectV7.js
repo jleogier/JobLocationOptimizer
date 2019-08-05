@@ -1,6 +1,7 @@
 $(function () {
     let circles = [];
-    let bounds = { north: NaN, east: NaN, south: NaN, west: NaN };
+    let bounds;
+    resetMapBounds();
 
     console.log('Get funky'); // Document Ready
 
@@ -27,9 +28,22 @@ $(function () {
         .catch(err => console.error(err));
     }
 
+    function resetSearchResults(){
+        resetMapBounds();
+        removeCirclesFromMap();
+        // also reset form things, titles, images, data, means, etc.
+    }
+
     function tryAllCities(country1, city1, country2, city2, jobCategory){
+
+        let numExpected = 2;
+
         getLocAndJobForCity(country1, city1, jobCategory)
         .then(city1results => {
+            if( numExpected == 2 ){
+                resetSearchResults();
+            }
+            numExpected--;
             displayResults(city1results);
         })
         .catch( city1error => {
@@ -40,6 +54,10 @@ $(function () {
         // --- not dependent on each other
         getLocAndJobForCity(country2, city2, jobCategory)
         .then(city2results => {
+            if( numExpected == 2 ){
+                resetSearchResults();
+            }
+            numExpected--;
             displayResults(city2results);
         })
         .catch( city2error => {
@@ -156,6 +174,8 @@ $(function () {
 
     }
 
+
+
     function zoomToMapBounds(){
         // center map on the global bounds
         console.log("Asking google to center map on bounds: ", JSON.stringify(bounds) )
@@ -163,9 +183,13 @@ $(function () {
         map.fitBounds(bounds);   // not working cause bounds suck
     }
 
+    function resetMapBounds(){
+        bounds = { north: NaN, east: NaN, south: NaN, west: NaN };
+    }
 
     // Displays results in HTML for ONE city
     function displayResults(data) {
+      
         // put circle on map and track it
         let newCircle = addCircleToMap(data);
         circles.push(newCircle);
@@ -412,6 +436,11 @@ $(function () {
                 radius: jobCount * 100,
             });
         }
+    }
+
+    function removeCirclesFromMap(){
+        circles.forEach( circle => circle.setMap(null) );
+        circles.length = 0;
     }
 
     // Submit Button
