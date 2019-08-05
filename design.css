@@ -1,6 +1,7 @@
-body * {
+form {
     display: flex;
-    padding: 0.5em;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 
 legend, form, input, h1, h3, h4 {
@@ -8,9 +9,9 @@ legend, form, input, h1, h3, h4 {
     align-content: center;
 }
 
-form {
-    flex-direction: column;
-    flex-wrap: wrap;
+legend {
+    margin-bottom: 1em;
+    font-size: 3em;
 }
 
 input, select {
@@ -18,11 +19,6 @@ input, select {
     margin: 1em;
     justify-content: center;
     align-content: center;
-}
-
-#map {
-    margin: 0.5em;
-    width: 100%;
 }
 
 #submitButton {
@@ -38,6 +34,22 @@ input, select {
     align-content: center;
 }
 
+.result, .displayedData {
+    justify-content: center;
+    align-content: center;
+    padding: 0.25em;
+    margin: 0.5em;
+}
+
+.result label, #mapHeading {
+    padding: 0.25em;
+    margin: 0.25em;
+}
+
+section.result {
+    margin: 3.5em 0.2em;
+}
+
 .userInputs {
     border-style: solid;
 }
@@ -45,4 +57,8 @@ input, select {
 ol {
     flex-wrap: wrap;
     max-width: 100%;
+}
+
+#noData {
+    color: red;
 }

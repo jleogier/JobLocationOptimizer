@@ -1,23 +1,27 @@
-$(function() {
-    console.log("Get funky");
+/* eslint-disable no-console */
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable indent */
+// eslint-disable-next-line no-undef
+$(function () {
+    console.log('Get funky');
 
     const ADZUNA_BASE_URL = 'https://api.adzuna.com/v1/api/';
     const ADZUNA_KEY = 'b22271cad1b74c76f8c6ec3587c34e86';
     const ADZUNA_APP_ID = 'e76d0c45';
 
-    const GMAPS_GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json?'
+    const GMAPS_GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json?';
     const GMAPS_API_KEY = 'AIzaSyDugko09xbH7YY4avMUTZJNsA3uKHcuTeI';
 
     // Gets general Job Search Data: Total Count + Salary Mean
-    function getAdzunaJobSearch (userInputCountry, userInputCity, jobCategory){
-        let AdzunaJobSearchResponse = ADZUNA_BASE_URL +
-        `jobs/${userInputCountry}/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_KEY}&where=${userInputCity}&category=${jobCategory}&content-type=application/json`;
+    function getAdzunaJobSearch(userInputCountry, userInputCity, jobCategory) {
+        const AdzunaJobSearchResponse = ADZUNA_BASE_URL 
+        + `jobs/${userInputCountry}/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_KEY}&where=${userInputCity}&category=${jobCategory}&content-type=application/json`;
 
         console.log('The Job Search Response URL is:', AdzunaJobSearchResponse);
 
         return fetch (AdzunaJobSearchResponse, {
             headers: {
-                Accept: 'application/json'
+                Accept: 'application/json',
             }
         })
         .then (response => response.json())
@@ -97,7 +101,6 @@ $(function() {
         console.log('Lat2/Lng2', lat2, lng2);
 
         // Calculates Center of Latitude and Longitude coordinates respectively
-        
         let latCen = (lat1 + lat2) / 2;
         let lngCen = (lng1 + lng2) / 2;
 
@@ -121,33 +124,48 @@ $(function() {
         
         console.log('This is the GeoCenLat:' , geoCenLat);
         console.log('This is the geoCenLng:' , geoCenLng);
-
-
-        // OG working code:
         
         let GMLL = new google.maps.LatLng(geoCenLat, geoCenLng); // GMLL = Google Maps Latitude and Longitude
 
-        // Zoom level needs to be fixed so that it still shows both locations ---- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
         console.log ('This is the Map Lat/Long... Object?', GMLL);
 
-        map.setCenter(GMLL);
-
-        // Final should return GMLL
+        return GMLL
 
     }
 
+// This should almost work somehow:
 
-    // Add Map Marker
+    // function finalMap() {
+    //     // Create the map.
+    //     var map = new google.maps.Map(document.getElementById('map'), {
+    //       zoom: 4,
+    //       center: GMLL,
+    //       mapTypeId: 'terrain'
+    //     });
 
-    function mapMarker () {
+    //     // Construct the circle for each loc in locationsArr.
+    //     // Note: We scale the area of the circle based on the Job Count.
+    //     for (var location in locationsArr) {
+    //       // Add the circle for this location to the map.
+    //       var locCirlcle = new google.maps.Circle({
+    //         strokeColor: '#FF0000',
+    //         strokeOpacity: 0.8,
+    //         strokeWeight: 2,
+    //         fillColor: '#FF0000',
+    //         fillOpacity: 0.35,
+    //         map: map,
+    //         center: locationsArr[loc].center,
+    //         radius: Math.sqrt(job.count) * 100
+    //       });
+    //     }
+    //   }
 
-    }
 
     // Submit Button 
 
     function submitHandler () {
 
+        // eslint-disable-next-line prefer-arrow-callback
         $('form').submit(function (e) {
             
             e.preventDefault();
